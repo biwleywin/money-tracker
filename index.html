@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Money Tracker</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -28,48 +34,74 @@
         }
 
         h1 {
-            font-size: 34px;
-            margin: 10px 0 25px;
+            font-size: 32px;
+            margin: 10px 0 24px;
         }
 
-        /* เดือน */
+        h2 {
+            margin-top: 25px;
+        }
+
+        /* =========================
+           MONTH
+        ========================= */
+
         .month-selector {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             background: white;
-            padding: 15px;
+
+            padding: 14px;
+
             border-radius: 14px;
-            margin-bottom: 15px;
+
+            margin-bottom: 14px;
         }
 
         .month-selector button {
-            width: 45px;
+            width: 44px;
             height: 42px;
-            padding: 0;
+
+            border: 0;
+            border-radius: 10px;
+
             background: #f0f0f0;
-            color: #222;
+
             font-size: 22px;
         }
 
         #monthLabel {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: bold;
         }
 
-        /* สรุป */
+        /* =========================
+           SUMMARY
+        ========================= */
+
         .summary {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 10px;
-            margin-bottom: 20px;
+
+            margin-bottom: 18px;
         }
 
         .card {
             background: white;
+
             padding: 15px;
+
             border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.05);
         }
 
         .card small {
@@ -78,7 +110,9 @@
 
         .card strong {
             display: block;
+
             margin-top: 8px;
+
             font-size: 18px;
         }
 
@@ -90,28 +124,41 @@
             color: #d62828;
         }
 
-        /* ปุ่ม */
-        button {
-            border: 0;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+        /* =========================
+           ADD BUTTON
+        ========================= */
 
         .add-btn {
             width: 100%;
+
             padding: 15px;
+
+            border: 0;
+
+            border-radius: 12px;
+
             background: #111;
+
             color: white;
-            margin-bottom: 20px;
+
+            font-size: 16px;
+
+            margin-bottom: 18px;
         }
 
-        /* Form */
+        /* =========================
+           FORM
+        ========================= */
+
         .form {
             display: none;
+
             background: white;
+
             padding: 18px;
+
             border-radius: 14px;
+
             margin-bottom: 20px;
         }
 
@@ -121,44 +168,154 @@
 
         label {
             display: block;
+
             margin-top: 12px;
+
             margin-bottom: 6px;
+
             font-size: 14px;
         }
 
         input,
         select {
             width: 100%;
+
             padding: 12px;
+
             border: 1px solid #ddd;
+
             border-radius: 10px;
+
             font-size: 16px;
+
             background: white;
         }
 
         .save-btn {
             width: 100%;
+
             background: #16803c;
+
             color: white;
+
+            border: 0;
+
             padding: 14px;
+
+            border-radius: 11px;
+
             margin-top: 18px;
+
+            font-size: 16px;
         }
 
         .cancel-btn {
             width: 100%;
+
             background: #eee;
+
+            border: 0;
+
             padding: 14px;
+
+            border-radius: 11px;
+
             margin-top: 8px;
+
+            font-size: 16px;
         }
 
-        /* รายการ */
+        /* =========================
+           ANALYSIS
+        ========================= */
+
+        .analysis {
+            background: white;
+
+            padding: 18px;
+
+            border-radius: 14px;
+
+            margin-top: 18px;
+        }
+
+        .analysis-title {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-bottom: 14px;
+        }
+
+        .category-row {
+            margin-bottom: 16px;
+        }
+
+        .category-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 6px;
+
+            font-size: 14px;
+        }
+
+        .category-name {
+            font-weight: bold;
+        }
+
+        .category-value {
+            color: #555;
+        }
+
+        .bar-background {
+            width: 100%;
+
+            height: 8px;
+
+            background: #eee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+
+            border-radius: 20px;
+
+            background: #222;
+        }
+
+        .no-data {
+            color: #777;
+
+            text-align: center;
+
+            padding: 10px 0;
+        }
+
+        /* =========================
+           TRANSACTIONS
+        ========================= */
+
         .transaction {
             background: white;
+
             padding: 15px;
+
             border-radius: 13px;
+
             margin-bottom: 10px;
+        }
+
+        .transaction-top {
             display: flex;
+
             justify-content: space-between;
+
             gap: 10px;
         }
 
@@ -168,35 +325,85 @@
 
         .transaction-info strong {
             display: block;
+
             font-size: 16px;
         }
 
         .transaction-info small {
             display: block;
+
             color: #777;
+
             margin-top: 5px;
+
             word-break: break-word;
         }
 
         .amount {
             font-weight: bold;
+
             white-space: nowrap;
+        }
+
+        .transaction-actions {
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 12px;
+
+            border-top: 1px solid #eee;
+
+            padding-top: 10px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            flex: 1;
+
+            padding: 9px;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background: #eee;
+        }
+
+        .delete-btn {
+            background: #ffe5e5;
+
+            color: #c62828;
         }
 
         .loading,
         .empty {
             text-align: center;
+
             color: #777;
+
             padding: 30px 10px;
         }
 
         .error {
             background: #ffe5e5;
+
             color: #b00020;
+
             padding: 12px;
+
             border-radius: 10px;
+
             margin-bottom: 15px;
         }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 450px) {
 
@@ -207,8 +414,11 @@
             h1 {
                 font-size: 30px;
             }
+
         }
+
     </style>
+
 </head>
 
 <body>
@@ -217,7 +427,11 @@
 
     <h1>💰 Money Tracker</h1>
 
-    <!-- เลือกเดือน -->
+
+    <!-- =========================
+         MONTH
+    ========================= -->
+
     <div class="month-selector">
 
         <button onclick="changeMonth(-1)">
@@ -235,58 +449,81 @@
     </div>
 
 
-    <!-- สรุป -->
+    <!-- =========================
+         SUMMARY
+    ========================= -->
+
     <div class="summary">
 
         <div class="card">
-            <small>รายรับ</small>
+
+            <small>
+                รายรับ
+            </small>
 
             <strong
-                class="income"
-                id="income">
+                id="income"
+                class="income">
                 ฿0
             </strong>
+
         </div>
 
 
         <div class="card">
-            <small>รายจ่าย</small>
+
+            <small>
+                รายจ่าย
+            </small>
 
             <strong
-                class="expense"
-                id="expense">
+                id="expense"
+                class="expense">
                 ฿0
             </strong>
+
         </div>
 
 
         <div class="card">
-            <small>คงเหลือ</small>
+
+            <small>
+                คงเหลือ
+            </small>
 
             <strong id="balance">
                 ฿0
             </strong>
+
         </div>
 
     </div>
 
 
-    <!-- เพิ่มรายการ -->
+    <!-- =========================
+         ADD
+    ========================= -->
+
     <button
         class="add-btn"
-        onclick="showForm()">
+        onclick="openAddForm()">
 
         ＋ เพิ่มรายการ
 
     </button>
 
 
-    <!-- Form -->
+    <!-- =========================
+         FORM
+    ========================= -->
+
     <div
         class="form"
         id="form">
 
-        <h2>เพิ่มรายการ</h2>
+        <h2 id="formTitle">
+            เพิ่มรายการ
+        </h2>
 
 
         <label>
@@ -388,7 +625,7 @@
 
         <button
             class="cancel-btn"
-            onclick="hideForm()">
+            onclick="closeForm()">
 
             ยกเลิก
 
@@ -396,6 +633,52 @@
 
     </div>
 
+
+    <!-- =========================
+         EXPENSE ANALYSIS
+    ========================= -->
+
+    <div class="analysis">
+
+        <div class="analysis-title">
+            📊 สรุปรายจ่ายตามหมวด
+        </div>
+
+        <div id="expenseAnalysis">
+
+            <div class="no-data">
+                ยังไม่มีรายจ่าย
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         INCOME ANALYSIS
+    ========================= -->
+
+    <div class="analysis">
+
+        <div class="analysis-title">
+            💰 สรุปรายรับตามหมวด
+        </div>
+
+        <div id="incomeAnalysis">
+
+            <div class="no-data">
+                ยังไม่มีรายรับ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TRANSACTIONS
+    ========================= -->
 
     <h2>
         รายการในเดือนนี้
@@ -433,19 +716,28 @@ const client =
 
 
 /* =========================
-   เดือนปัจจุบัน
+   MONTH
 ========================= */
 
-let selectedMonth = new Date();
+let selectedMonth =
+    new Date();
 
 selectedMonth.setDate(1);
 
 
 /* =========================
-   ชื่อเดือนภาษาไทย
+   EDITING
+========================= */
+
+let editingId = null;
+
+
+/* =========================
+   MONTH NAMES
 ========================= */
 
 const thaiMonths = [
+
     "มกราคม",
     "กุมภาพันธ์",
     "มีนาคม",
@@ -458,539 +750,62 @@ const thaiMonths = [
     "ตุลาคม",
     "พฤศจิกายน",
     "ธันวาคม"
+
 ];
 
+
+/* =========================
+   CATEGORY NAMES
+========================= */
+
+const categoryNames = {
+
+    Food: "อาหาร",
+
+    Transport: "เดินทาง",
+
+    Gaming: "เกม",
+
+    Roblox: "Roblox",
+
+    Shopping: "ซื้อของ",
+
+    Salary: "เงินเดือน",
+
+    Other: "อื่น ๆ"
+
+};
+
+
+/* =========================
+   MONTH LABEL
+========================= */
 
 function updateMonthLabel() {
 
     const month =
-        thaiMonths[selectedMonth.getMonth()];
+        thaiMonths[
+            selectedMonth.getMonth()
+        ];
+
 
     const year =
-        selectedMonth.getFullYear() + 543;
+        selectedMonth.getFullYear()
+        + 543;
 
-    document.getElementById("monthLabel")
-        .textContent =
+
+    document.getElementById(
+        "monthLabel"
+    ).textContent =
         `${month} ${year}`;
+
 }
 
 
 /* =========================
-   เปลี่ยนเดือน
+   CHANGE MONTH
 ========================= */
 
 function changeMonth(amount) {
 
     selectedMonth.setMonth(
-        selectedMonth.getMonth() + amount
-    );
-
-    updateMonthLabel();
-
-    loadTransactions();
-
-}
-
-
-/* =========================
-   ช่วงวันที่ของเดือน
-========================= */
-
-function getMonthRange() {
-
-    const year =
-        selectedMonth.getFullYear();
-
-    const month =
-        selectedMonth.getMonth();
-
-
-    const start =
-        `${year}-${String(month + 1).padStart(2, "0")}-01`;
-
-
-    const nextMonth =
-        new Date(year, month + 1, 1);
-
-
-    const end =
-        `${nextMonth.getFullYear()}-${String(
-            nextMonth.getMonth() + 1
-        ).padStart(2, "0")}-01`;
-
-
-    return {
-        start,
-        end
-    };
-
-}
-
-
-/* =========================
-   Login
-========================= */
-
-async function login() {
-
-    const {
-        data: sessionData
-    } = await client.auth.getSession();
-
-
-    if (sessionData.session) {
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await client.auth.signInAnonymously();
-
-
-    if (error) {
-
-        console.error(error);
-
-        alert(
-            "Login ไม่สำเร็จ: "
-            + error.message
-        );
-
-    }
-
-}
-
-
-/* =========================
-   เปิด Form
-========================= */
-
-function showForm() {
-
-    document.getElementById("form")
-        .style.display = "block";
-
-}
-
-
-/* =========================
-   ปิด Form
-========================= */
-
-function hideForm() {
-
-    document.getElementById("form")
-        .style.display = "none";
-
-}
-
-
-/* =========================
-   บันทึกรายการ
-========================= */
-
-async function saveTransaction() {
-
-    const type =
-        document.getElementById("type").value;
-
-
-    const amount =
-        Number(
-            document.getElementById("amount").value
-        );
-
-
-    const category =
-        document.getElementById("category").value;
-
-
-    const description =
-        document.getElementById("description").value
-            .trim();
-
-
-    const date =
-        document.getElementById("date").value;
-
-
-    if (!amount || amount <= 0) {
-
-        alert("กรอกจำนวนเงินก่อน");
-
-        return;
-
-    }
-
-
-    if (!date) {
-
-        alert("เลือกวันที่ก่อน");
-
-        return;
-
-    }
-
-
-    const {
-        data: {
-            user
-        }
-    } =
-        await client.auth.getUser();
-
-
-    if (!user) {
-
-        alert("ไม่พบ User");
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await client
-            .from("transactions")
-            .insert({
-
-                user_id: user.id,
-
-                type: type,
-
-                amount: amount,
-
-                category: category,
-
-                description: description,
-
-                transaction_date: date
-
-            });
-
-
-    if (error) {
-
-        console.error(error);
-
-        alert(
-            "บันทึกไม่สำเร็จ: "
-            + error.message
-        );
-
-        return;
-
-    }
-
-
-    document.getElementById("amount")
-        .value = "";
-
-
-    document.getElementById("description")
-        .value = "";
-
-
-    hideForm();
-
-
-    loadTransactions();
-
-}
-
-
-/* =========================
-   โหลดรายการของเดือน
-========================= */
-
-async function loadTransactions() {
-
-    const container =
-        document.getElementById("transactions");
-
-
-    container.innerHTML =
-        `<div class="loading">
-            กำลังโหลด...
-        </div>`;
-
-
-    const {
-        start,
-        end
-    } =
-        getMonthRange();
-
-
-    const {
-        data,
-        error
-    } =
-        await client
-            .from("transactions")
-            .select("*")
-            .gte(
-                "transaction_date",
-                start
-            )
-            .lt(
-                "transaction_date",
-                end
-            )
-            .order(
-                "transaction_date",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (error) {
-
-        console.error(error);
-
-        container.innerHTML =
-            `<div class="error">
-                โหลดข้อมูลไม่ได้
-            </div>`;
-
-        return;
-
-    }
-
-
-    let income = 0;
-
-    let expense = 0;
-
-
-    container.innerHTML = "";
-
-
-    if (!data || data.length === 0) {
-
-        container.innerHTML =
-            `<div class="empty">
-                ไม่มีรายการในเดือนนี้
-            </div>`;
-
-        updateSummary(
-            0,
-            0
-        );
-
-        return;
-
-    }
-
-
-    data.forEach(item => {
-
-        const amount =
-            Number(item.amount);
-
-
-        if (item.type === "income") {
-
-            income += amount;
-
-        } else {
-
-            expense += amount;
-
-        }
-
-
-        const div =
-            document.createElement("div");
-
-
-        div.className =
-            "transaction";
-
-
-        const sign =
-            item.type === "income"
-                ? "+"
-                : "-";
-
-
-        const color =
-            item.type === "income"
-                ? "income"
-                : "expense";
-
-
-        div.innerHTML = `
-
-            <div class="transaction-info">
-
-                <strong>
-                    ${escapeHtml(item.category)}
-                </strong>
-
-                <small>
-                    ${escapeHtml(
-                        item.description || ""
-                    )}
-                </small>
-
-                <small>
-                    ${formatDate(
-                        item.transaction_date
-                    )}
-                </small>
-
-            </div>
-
-
-            <div class="amount ${color}">
-                ${sign}฿${amount.toLocaleString(
-                    "th-TH"
-                )}
-            </div>
-
-        `;
-
-
-        container.appendChild(div);
-
-    });
-
-
-    updateSummary(
-        income,
-        expense
-    );
-
-}
-
-
-/* =========================
-   Summary
-========================= */
-
-function updateSummary(
-    income,
-    expense
-) {
-
-    document.getElementById("income")
-        .textContent =
-        "฿" +
-        income.toLocaleString("th-TH");
-
-
-    document.getElementById("expense")
-        .textContent =
-        "฿" +
-        expense.toLocaleString("th-TH");
-
-
-    document.getElementById("balance")
-        .textContent =
-        "฿" +
-        (
-            income - expense
-        ).toLocaleString("th-TH");
-
-}
-
-
-/* =========================
-   วันที่
-========================= */
-
-function formatDate(dateString) {
-
-    const [
-        year,
-        month,
-        day
-    ] =
-        dateString.split("-");
-
-
-    return `${day}/${month}/${Number(year) + 543}`;
-
-}
-
-
-/* =========================
-   ป้องกัน HTML แปลก ๆ
-========================= */
-
-function escapeHtml(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* =========================
-   วันที่เริ่มต้น
-========================= */
-
-function setDefaultDate() {
-
-    const today =
-        new Date();
-
-
-    const year =
-        today.getFullYear();
-
-
-    const month =
-        String(
-            today.getMonth() + 1
-        ).padStart(2, "0");
-
-
-    const day =
-        String(
-            today.getDate()
-        ).padStart(2, "0");
-
-
-    document.getElementById("date")
-        .value =
-        `${year}-${month}-${day}`;
-
-}
-
-
-/* =========================
-   เริ่มระบบ
-========================= */
-
-async function start() {
-
-    updateMonthLabel();
-
-    setDefaultDate();
-
-    await login();
-
-    await loadTransactions();
-
-}
-
-
-start();
-
-</script>
-
-</body>
-</html>
