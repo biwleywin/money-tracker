@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Money Tracker</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .card small {
+            color: #777;
+        }
+
+        .card strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 18px;
+        }
+
+        .income {
+            color: #16803c;
+        }
+
+        .expense {
+            color: #d62828;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background: #111;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .form {
+            display: none;
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .save-btn {
+            background: #16803c;
+            color: white;
+            margin-top: 18px;
+        }
+
+        .cancel-btn {
+            background: #eee;
+            margin-top: 8px;
+        }
+
+        .transaction {
+            background: white;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .transaction small {
+            display: block;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .amount {
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        @media (max-width: 450px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>💰 Money Tracker</h1>
+
+    <div class="summary">
+
+        <div class="card">
+            <small>รายรับ</small>
+            <strong class="income" id="income">฿0</strong>
+        </div>
+
+        <div class="card">
+            <small>รายจ่าย</small>
+            <strong class="expense" id="expense">฿0</strong>
+        </div>
+
+        <div class="card">
+            <small>คงเหลือ</small>
+            <strong id="balance">฿0</strong>
+        </div>
+
+    </div>
+
+    <button class="add-btn" onclick="showForm()">
+        ＋ เพิ่มรายการ
+    </button>
+
+    <div class="form" id="form">
+
+        <h2>เพิ่มรายการ</h2>
+
+        <label>ประเภท</label>
+
+        <select id="type">
+            <option value="income">รายรับ</option>
+            <option value="expense">รายจ่าย</option>
+        </select>
+
+        <label>จำนวนเงิน</label>
+
+        <input
+            id="amount"
+            type="number"
+            placeholder="เช่น 500"
+            min="0"
+            step="0.01"
+        >
+
+        <label>หมวดหมู่</label>
+
+        <select id="category">
+            <option value="Food">อาหาร</option>
+            <option value="Transport">เดินทาง</option>
+            <option value="Gaming">เกม</option>
+            <option value="Roblox">Roblox</option>
+            <option value="Shopping">ซื้อของ</option>
+            <option value="Salary">เงินเดือน</option>
+            <option value="Other">อื่น ๆ</option>
+        </select>
+
+        <label>รายละเอียด</label>
+
+        <input
+            id="description"
+            type="text"
+            placeholder="เช่น ขายไอเทม"
+        >
+
+        <label>ช่องทางเงิน</label>
+
+        <select id="payment">
+            <option value="Cash">เงินสด</option>
+            <option value="Bank">ธนาคาร</option>
+            <option value="TrueMoney">TrueMoney</option>
+            <option value="Other">อื่น ๆ</option>
+        </select>
+
+        <label>วันที่</label>
+
+        <input
+            id="date"
+            type="date"
+        >
+
+        <button class="save-btn" onclick="saveTransaction()">
+            บันทึก
+        </button>
+
+        <button class="cancel-btn" onclick="hideForm()">
+            ยกเลิก
+        </button>
+
+    </div>
+
+    <h2>รายการล่าสุด</h2>
+
+    <div id="transactions">
+        <div class="loading">
+            กำลังโหลด...
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+    "https://sbiziifpybyzljikjnrh.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_aD38PwfPHzSYU83kIbmnEg_rHVMgomF";
+
+const client = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// ตั้งวันที่ปัจจุบัน
+document.getElementById("date").value =
+    new Date().toISOString().split("T")[0];
+
+
+// Login Anonymous
+async function login() {
+
+    const { data: sessionData } =
+        await client.auth.getSession();
+
+    if (sessionData.session) {
+        return;
+    }
+
+    const { error } =
+        await client.auth.signInAnonymously();
+
+    if (error) {
+        console.error(error);
+        alert("Login ไม่สำเร็จ: " + error.message);
+        return;
+    }
+}
+
+
+// เปิดฟอร์ม
+function showForm() {
+
+    document.getElementById("form").style.display =
+        "block";
+}
+
+
+// ปิดฟอร์ม
+function hideForm() {
+
+    document.getElementById("form").style.display =
+        "none";
+}
+
+
+// บันทึกรายการ
+async function saveTransaction() {
+
+    const type =
+        document.getElementById("type").value;
+
+    const amount =
+        Number(document.getElementById("amount").value);
+
+    const category =
+        document.getElementById("category").value;
+
+    const description =
+        document.getElementById("description").value;
+
+    const payment =
+        document.getElementById("payment").value;
+
+    const date =
+        document.getElementById("date").value;
+
+
+    if (!amount || amount <= 0) {
+
+        alert("กรอกจำนวนเงินก่อน");
+
+        return;
+    }
+
+
+    const {
+        data: {
+            user
+        }
+    } = await client.auth.getUser();
+
+
+    if (!user) {
+
+        alert("ไม่พบ User");
+
+        return;
+    }
+
+
+    const { error } =
+        await client
+            .from("transactions")
+            .insert({
+
+                user_id: user.id,
+
+                type: type,
+
+                amount: amount,
+
+                category: category,
+
+                description: description,
+
+                payment_method: payment,
+
+                transaction_date: date
+            });
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert("บันทึกไม่สำเร็จ: " + error.message);
+
+        return;
+    }
+
+
+    // ล้างช่อง
+    document.getElementById("amount").value = "";
+    document.getElementById("description").value = "";
+
+    hideForm();
+
+    loadTransactions();
+}
+
+
+// โหลดรายการ
+async function loadTransactions() {
+
+    const {
+        data,
+        error
+    } = await client
+        .from("transactions")
+        .select("*")
+        .order("transaction_date", {
+            ascending: false
+        })
+        .limit(50);
+
+
+    if (error) {
+
+        console.error(error);
+
+        document.getElementById("transactions").innerHTML =
+            "<p>โหลดข้อมูลไม่ได้</p>";
+
+        return;
+    }
+
+
+    let income = 0;
+    let expense = 0;
+
+
+    const container =
+        document.getElementById("transactions");
+
+
+    container.innerHTML = "";
+
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML =
+            "<div class='loading'>ยังไม่มีรายการ</div>";
+
+        updateSummary(0, 0);
+
+        return;
+    }
+
+
+    data.forEach(item => {
+
+        const amount =
+            Number(item.amount);
+
+
+        if (item.type === "income") {
+
+            income += amount;
+
+        } else {
+
+            expense += amount;
+
+        }
+
+
+        const div =
+            document.createElement("div");
+
+
+        div.className =
+            "transaction";
+
+
+        const sign =
+            item.type === "income"
+                ? "+"
+                : "-";
+
+
+        const color =
+            item.type === "income"
+                ? "income"
+                : "expense";
+
+
+        div.innerHTML = `
+
+            <div>
+
+                <strong>
+                    ${item.category}
+                </strong>
+
+                <small>
+                    ${item.description || ""}
+                </small>
+
+                <small>
+                    ${item.transaction_date}
+                    ·
+                    ${item.payment_method || ""}
+                </small>
+
+            </div>
+
+            <div class="amount ${color}">
+                ${sign}฿${amount.toLocaleString()}
+            </div>
+
+        `;
+
+
+        container.appendChild(div);
+
+    });
+
+
+    updateSummary(
+        income,
+        expense
+    );
+}
+
+
+// อัปเดตยอด
+function updateSummary(
+    income,
+    expense
+) {
+
+    document.getElementById("income")
+        .textContent =
+        "฿" + income.toLocaleString();
+
+    document.getElementById("expense")
+        .textContent =
+        "฿" + expense.toLocaleString();
+
+    document.getElementById("balance")
+        .textContent =
+        "฿" + (income - expense).toLocaleString();
+}
+
+
+// เริ่มระบบ
+async function start() {
+
+    await login();
+
+    await loadTransactions();
+
+}
+
+start();
+
+</script>
+
+</body>
+</html>
