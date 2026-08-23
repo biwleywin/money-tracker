@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#101214">
+<title>Money Tracker</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;background:#101214;color:#f1f1f1}
+body{font-family:Arial,"Noto Sans Thai",sans-serif;overflow-x:hidden}
+button,input,select{font:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.container{width:100%;max-width:600px;margin:0 auto;padding:18px}
+h1{font-size:32px;margin:8px 0 20px;line-height:1.2}
+h2{font-size:21px;margin:25px 0 12px}
+
+.month{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    min-height:68px;
+    padding:10px 12px;
+    margin-bottom:15px;
+    background:#1b1e22;
+    border-radius:16px;
+}
+.month button{
+    width:48px;height:46px;
+    border:0;border-radius:12px;
+    background:#30343a;color:#fff;
+    font-size:27px;line-height:1;
+}
+.month button:active{transform:scale(.94)}
+#monthText{font-size:18px;font-weight:700;text-align:center;min-width:130px}
+
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card{background:#1b1e22;border-radius:16px;padding:15px;min-width:0}
+.card small{color:#999}
+.card strong{display:block;margin-top:8px;font-size:19px;overflow-wrap:anywhere}
+.green{color:#35c76f}.red{color:#ff5757}
+
+.add{
+    width:100%;margin-top:15px;padding:16px;
+    border:0;border-radius:14px;
+    background:#f1f1f1;color:#111;
+    font-size:17px;font-weight:700;
+}
+.add:active{transform:scale(.98)}
+
+.form{
+    display:none;
+    margin-top:15px;padding:18px;
+    background:#1b1e22;border-radius:16px;
+}
+.form h2{margin:0 0 15px}
+label{display:block;margin:12px 0 6px;color:#aaa;font-size:14px}
+input,select{
+    width:100%;padding:13px;
+    border:1px solid #3a3f45;border-radius:11px;
+    outline:none;background:#25292e;color:#f1f1f1;
+    font-size:16px;
+}
+input:focus,select:focus{border-color:#777}
+input::placeholder{color:#777}
+.save,.cancel{
+    width:100%;padding:13px;border:0;border-radius:11px;
+    font-size:16px;font-weight:700;
+}
+.save{margin-top:18px;background:#16803c;color:#fff}
+.cancel{margin-top:8px;background:#30343a;color:#fff}
+.save:disabled{opacity:.6;cursor:wait}
+
+.filters{
+    margin-top:20px;padding:16px;
+    background:#1b1e22;border-radius:16px;
+}
+.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.filter-reset{
+    width:100%;margin-top:10px;padding:10px;
+    border:0;border-radius:10px;
+    background:#30343a;color:#fff;
+}
+.result-count{margin-top:11px;color:#888;font-size:13px}
+
+.analysis{
+    margin-top:20px;padding:18px;
+    background:#1b1e22;border-radius:16px;
+}
+.analysis-title{font-size:18px;font-weight:700;margin-bottom:15px}
+.category{margin-bottom:15px}
+.category-top{
+    display:flex;justify-content:space-between;gap:10px;
+    margin-bottom:6px;font-size:14px
+}
+.bar-bg{height:8px;background:#30343a;border-radius:20px;overflow:hidden}
+.bar{height:100%;background:#f1f1f1;border-radius:20px}
+
+.transaction{
+    margin-bottom:10px;padding:15px;
+    background:#1b1e22;border-radius:14px;
+}
+.transaction-main{display:flex;justify-content:space-between;gap:12px}
+.transaction-left{min-width:0}
+.transaction-name{font-weight:700;overflow-wrap:anywhere}
+.transaction-detail{margin-top:5px;color:#999;font-size:14px;overflow-wrap:anywhere}
+.transaction-amount{flex-shrink:0;font-weight:700;white-space:nowrap}
+.actions{
+    display:flex;gap:8px;
+    margin-top:12px;padding-top:10px;
+    border-top:1px solid #30343a
+}
+.edit,.delete{
+    flex:1;padding:10px;border:0;border-radius:10px
+}
+.edit{background:#30343a;color:#fff}
+.delete{background:#4a2525;color:#ff6b6b}
+
+.center{text-align:center;color:#999;padding:25px}
+.error{
+    margin-top:15px;padding:15px;
+    background:#3a2020;border-radius:12px;
+    color:#ff7777;word-break:break-word
+}
+.status{
+    margin-top:10px;
+    color:#777;
+    font-size:12px;
+    text-align:center
+}
+
+@media(max-width:450px){
+    .container{padding:15px}
+    h1{font-size:30px}
+    .summary{grid-template-columns:1fr}
+    .filter-grid{grid-template-columns:1fr}
+}
+
+/* ================= V7 MODERN DARK UI ================= */
+:root{
+ --bg:#090b0f;--surface:#11151b;--surface2:#171c23;--line:rgba(255,255,255,.075);
+ --text:#f7f8fa;--muted:#8f98a6;--green:#35d07f;--red:#ff5d68;
+ --accent:#8ea2ff;--shadow:0 18px 50px rgba(0,0,0,.28)
+}
+html,body{background:radial-gradient(circle at 50% -10%,rgba(78,96,150,.18),transparent 34%),var(--bg);color:var(--text)}
+body{font-family:Arial,"Noto Sans Thai",sans-serif}
+.container{max-width:680px;padding:22px 18px 50px}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:4px 0 22px}
+.brand-row{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#d8ff8b,#76dc6e);color:#0b170d;font-size:25px;font-weight:900;box-shadow:0 10px 28px rgba(118,220,110,.16)}
+h1{margin:0;font-size:27px;letter-spacing:-.7px}
+.brand-subtitle{margin-top:3px;color:var(--muted);font-size:12px}
+.connection-pill{display:flex;align-items:center;gap:7px;padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);color:#aeb6c2;font-size:11px;white-space:nowrap}
+.connection-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(53,208,127,.08)}
+.month{min-height:76px;padding:12px 14px;margin-bottom:14px;background:linear-gradient(145deg,#151a21,#10141a);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.month button{width:46px;height:46px;border:1px solid rgba(255,255,255,.06);background:#242a33;border-radius:14px;transition:.15s ease}
+.month button:hover{background:#2b323d}
+#monthText{font-size:17px;letter-spacing:.2px}
+.summary{grid-template-columns:repeat(3,1fr);gap:9px}
+.card{position:relative;overflow:hidden;padding:15px 14px;min-height:92px;border:1px solid var(--line);background:linear-gradient(145deg,#151a21,#11151b);border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.card::after{content:"";position:absolute;width:70px;height:70px;right:-35px;bottom:-35px;border-radius:50%;background:rgba(255,255,255,.035)}
+.card small{color:#858e9c;font-size:11px}
+.card strong{margin-top:9px;font-size:18px;letter-spacing:-.3px}
+#income{color:var(--green)}#expense{color:var(--red)}
+#balance.green{color:#f5f7fa}#balance.red{color:var(--red)}
+.add{position:relative;overflow:hidden;margin-top:13px;padding:16px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,#f5f6f7,#dfe4e8);color:#0c0e11;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.25);transition:.15s ease}
+.add:hover{transform:translateY(-1px);box-shadow:0 16px 34px rgba(0,0,0,.3)}
+.form,.filters,.analysis,.transaction{border:1px solid var(--line);background:linear-gradient(145deg,#151a21,#11151b);box-shadow:0 10px 35px rgba(0,0,0,.14)}
+.form{padding:20px;border-radius:20px}.form h2{font-size:20px}
+input,select{border:1px solid rgba(255,255,255,.08);background:#0f1318;border-radius:13px;color:#f5f6f8;transition:.15s ease}
+input:focus,select:focus{border-color:rgba(142,162,255,.65);box-shadow:0 0 0 3px rgba(142,162,255,.08)}
+.save{background:linear-gradient(135deg,#25b86d,#16803c);border-radius:13px;box-shadow:0 10px 22px rgba(22,128,60,.18)}
+.cancel{background:#252b34;border:1px solid rgba(255,255,255,.06)}
+.filters{margin-top:18px;padding:15px;border-radius:20px}
+.filters::before{content:"รายการ";display:block;margin-bottom:10px;font-size:14px;font-weight:700;color:#dce1e8}
+.filter-reset{background:#252b34;color:#aeb6c2;border:1px solid rgba(255,255,255,.05)}
+.analysis{padding:18px;border-radius:20px}.analysis-title{display:flex;align-items:center;gap:7px;margin-bottom:17px}
+.bar-bg{height:7px;background:#272d36}.bar{background:linear-gradient(90deg,#8ea2ff,#b9c4ff)}
+.transaction{padding:15px;border-radius:17px;transition:.15s ease}
+.transaction:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.11)}
+.transaction-name{font-size:15px}.transaction-detail{color:#7f8997;font-size:12px}
+.transaction-amount{padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.035)}
+.transaction-amount.green{background:rgba(53,208,127,.12)}.transaction-amount.red{background:rgba(255,93,104,.12)}
+.actions{border-top:1px solid rgba(255,255,255,.055)}.edit,.delete{border:1px solid rgba(255,255,255,.05)}
+.edit{background:#252b34}.delete{background:rgba(255,93,104,.12)}
+.center{padding:28px 15px;color:#747e8c}.error{border:1px solid rgba(255,93,104,.16);background:rgba(255,93,104,.12)}
+.status{padding-top:4px;color:#596270}
+@media(max-width:600px){.app-header{align-items:flex-start}.connection-pill{display:none}.summary{grid-template-columns:repeat(3,1fr)}.card{min-height:88px;padding:13px 10px}.card strong{font-size:16px}.card small{font-size:10px}}
+@media(max-width:380px){.container{padding-left:12px;padding-right:12px}.summary{gap:7px}.card strong{font-size:14px}.brand-icon{width:43px;height:43px;flex-basis:43px}h1{font-size:24px}}
+
+
+/* ================= V8 ACCOUNT UI ================= */
+.account-button{
+    display:flex;align-items:center;gap:7px;
+    padding:8px 11px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(255,255,255,.045);
+    color:#e9edf2;
+    font-size:12px;font-weight:700;
+}
+.account-avatar{
+    width:24px;height:24px;display:grid;place-items:center;
+    border-radius:50%;background:#252b34;font-size:13px;
+}
+.account-modal{
+    display:none;position:fixed;inset:0;z-index:9999;
+}
+.account-modal.open{display:block}
+.account-backdrop{
+    position:absolute;inset:0;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(5px);
+}
+.account-panel{
+    position:absolute;
+    left:50%;top:50%;
+    width:min(92vw,470px);
+    max-height:90vh;
+    overflow:auto;
+    transform:translate(-50%,-50%);
+    padding:20px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:24px;
+    background:linear-gradient(145deg,#171c23,#0f1318);
+    box-shadow:0 30px 100px rgba(0,0,0,.55);
+}
+.account-panel-head{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+}
+.account-panel-head h2{margin:3px 0 0;font-size:21px}
+.account-kicker{font-size:10px;letter-spacing:1.5px;color:#7f8997;font-weight:700}
+.account-close{
+    width:38px;height:38px;border:0;border-radius:12px;
+    background:#252b34;color:#fff;font-size:25px;line-height:1;
+}
+.account-status-card{
+    display:flex;align-items:center;gap:12px;
+    margin-top:18px;padding:14px;
+    border:1px solid var(--line);
+    border-radius:17px;background:rgba(255,255,255,.025);
+}
+.account-avatar-large{
+    width:48px;height:48px;display:grid;place-items:center;
+    border-radius:15px;background:#252b34;font-size:23px;
+}
+.account-status-copy{min-width:0}
+.account-status-copy strong{display:block;font-size:15px}
+.account-status-copy span{
+    display:block;margin-top:4px;color:#8993a0;font-size:12px;
+    overflow-wrap:anywhere;
+}
+.account-section{margin-top:18px}
+.account-section-title{font-size:15px;font-weight:700}
+.account-help{
+    margin:8px 0 15px;color:#8e98a5;font-size:12px;line-height:1.55;
+}
+.account-primary,.account-secondary,.account-danger{
+    width:100%;padding:13px;margin-top:13px;
+    border:0;border-radius:12px;font-size:14px;font-weight:700;
+}
+.account-primary{
+    background:linear-gradient(135deg,#25b86d,#16803c);
+    color:#fff;
+}
+.account-secondary{background:#252b34;color:#fff}
+.account-danger{background:rgba(255,93,104,.12);color:#ff737b}
+.account-primary:disabled,.account-secondary:disabled{
+    opacity:.55;cursor:wait;
+}
+.account-message{
+    min-height:18px;margin-top:10px;
+    color:#8f98a6;font-size:12px;line-height:1.5;
+    white-space:pre-wrap;
+}
+.account-message.success{color:#35d07f}
+.account-message.error{color:#ff737b}
+.account-email-box{
+    display:flex;flex-direction:column;gap:5px;
+    margin-top:10px;padding:12px;
+    border-radius:12px;background:#0d1116;
+}
+.account-email-box span{color:#7f8997;font-size:11px}
+.account-email-box strong{font-size:13px;overflow-wrap:anywhere}
+.account-note{
+    margin-top:18px;padding-top:14px;
+    border-top:1px solid var(--line);
+    color:#697381;font-size:10px;line-height:1.55;
+}
+.account-note code{color:#929baa}
+@media(max-width:600px){
+    .account-button span:last-child{display:none}
+    .account-button{padding:7px}
+    .account-panel{width:calc(100vw - 24px);padding:18px}
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="app-header">
+        <div class="brand-row">
+            <div class="brand-icon">฿</div>
+            <div>
+                <h1>Money Tracker</h1>
+                <div class="brand-subtitle">จัดการรายรับรายจ่ายของคุณ</div>
+            </div>
+        </div>
+        <button class="account-button" type="button" onclick="openAccount()">
+            <span class="account-avatar">👤</span>
+            <span id="accountButtonText">บัญชี</span>
+        </button>
+    </header>
+
+    <!-- เดือนมีค่าเริ่มต้นตั้งแต่ HTML
+         ไม่ต้องรอ JavaScript หรือ Supabase -->
+    <div class="month">
+        <button type="button" onclick="previousMonth()">‹</button>
+        <div id="monthText">สิงหาคม 2569</div>
+        <button type="button" onclick="nextMonth()">›</button>
+    </div>
+
+    <div class="summary">
+        <div class="card">
+            <small>รายรับ</small>
+            <strong id="income" class="green">฿0</strong>
+        </div>
+        <div class="card">
+            <small>รายจ่าย</small>
+            <strong id="expense" class="red">฿0</strong>
+        </div>
+        <div class="card">
+            <small>คงเหลือ</small>
+            <strong id="balance">฿0</strong>
+        </div>
+    </div>
+
+    <!-- ปุ่มนี้ใช้ inline onclick
+         จึงไม่ต้องรอ Supabase -->
+    <button class="add" type="button" onclick="openForm()">
+        ＋ เพิ่มรายการ
+    </button>
+
+    <div id="form" class="form">
+        <h2 id="formTitle">เพิ่มรายการ</h2>
+
+        <label>ประเภท</label>
+        <select id="type">
+            <option value="income">รายรับ</option>
+            <option value="expense">รายจ่าย</option>
+        </select>
+
+        <label>จำนวนเงิน</label>
+        <input id="amount" type="number" min="0" step="0.01"
+               inputmode="decimal" placeholder="เช่น 500">
+
+        <label>หมวดหมู่</label>
+        <select id="category">
+            <option value="Food">อาหาร</option>
+            <option value="Transport">เดินทาง</option>
+            <option value="Gaming">เกม</option>
+            <option value="Roblox">Roblox</option>
+            <option value="Shopping">ซื้อของ</option>
+            <option value="Salary">เงินเดือน</option>
+            <option value="Other">อื่น ๆ</option>
+        </select>
+
+        <label>รายละเอียด</label>
+        <input id="description" type="text" maxlength="200"
+               placeholder="เช่น ขายไอเทม">
+
+        <label>วันที่</label>
+        <input id="date" type="date">
+
+        <button id="saveButton" class="save" type="button"
+                onclick="saveTransaction()">บันทึก</button>
+
+        <button class="cancel" type="button"
+                onclick="closeForm()">ยกเลิก</button>
+    </div>
+
+
+    <!-- ================= ACCOUNT ================= -->
+    <div id="accountModal" class="account-modal" aria-hidden="true">
+        <div class="account-backdrop" onclick="closeAccount()"></div>
+
+        <div class="account-panel">
+            <div class="account-panel-head">
+                <div>
+                    <div class="account-kicker">ACCOUNT</div>
+                    <h2>บัญชีของฉัน</h2>
+                </div>
+                <button class="account-close" type="button" onclick="closeAccount()">×</button>
+            </div>
+
+            <div class="account-status-card">
+                <div id="accountAvatarLarge" class="account-avatar-large">👤</div>
+                <div class="account-status-copy">
+                    <strong id="accountStatusTitle">กำลังตรวจสอบ...</strong>
+                    <span id="accountStatusText">กำลังอ่านสถานะบัญชี</span>
+                </div>
+            </div>
+
+            <div id="anonymousBox" class="account-section">
+                <div class="account-section-title">🔐 บันทึกข้อมูลถาวร</div>
+                <p class="account-help">
+                    ตอนนี้คุณกำลังใช้บัญชีชั่วคราว ข้อมูลใน Supabase ยังผูกกับบัญชีนี้อยู่
+                    การอัปเกรดด้านล่างจะพยายามใช้ User เดิม เพื่อไม่ให้รายการเงินหาย
+                </p>
+
+                <label>อีเมล</label>
+                <input id="accountEmail" type="email" autocomplete="email"
+                       placeholder="you@example.com">
+
+                <label>รหัสผ่าน</label>
+                <input id="accountPassword" type="password"
+                       autocomplete="new-password" minlength="6"
+                       placeholder="อย่างน้อย 6 ตัวอักษร">
+
+                <button id="upgradeButton" class="account-primary" type="button"
+                        onclick="upgradeAnonymousAccount()">
+                    🔒 สร้างบัญชีถาวร
+                </button>
+
+                <div id="accountMessage" class="account-message"></div>
+            </div>
+
+            <div id="memberBox" class="account-section" style="display:none">
+                <div class="account-section-title">✅ บัญชีถาวร</div>
+                <div class="account-email-box">
+                    <span>อีเมล</span>
+                    <strong id="accountEmailDisplay">-</strong>
+                </div>
+
+                <button class="account-secondary" type="button"
+                        onclick="resetPasswordEmail()">
+                    📧 ส่งอีเมลเปลี่ยนรหัสผ่าน
+                </button>
+
+                <button class="account-danger" type="button"
+                        onclick="logoutAccount()">
+                    ออกจากระบบ
+                </button>
+
+                <div id="memberMessage" class="account-message"></div>
+            </div>
+
+            <div class="account-note">
+                User ID ของบัญชีปัจจุบันจะถูกใช้เป็นตัวเชื่อมกับรายการใน <code>transactions</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="filters">
+        <input id="search" type="search"
+               placeholder="🔎 ค้นหารายการ..."
+               autocomplete="off">
+
+        <div class="filter-grid" style="margin-top:10px">
+            <select id="typeFilter">
+                <option value="all">ทุกประเภท</option>
+                <option value="income">รายรับ</option>
+                <option value="expense">รายจ่าย</option>
+            </select>
+
+            <select id="categoryFilter">
+                <option value="all">ทุกหมวด</option>
+                <option value="Food">อาหาร</option>
+                <option value="Transport">เดินทาง</option>
+                <option value="Gaming">เกม</option>
+                <option value="Roblox">Roblox</option>
+                <option value="Shopping">ซื้อของ</option>
+                <option value="Salary">เงินเดือน</option>
+                <option value="Other">อื่น ๆ</option>
+            </select>
+        </div>
+
+        <label>เรียงรายการ</label>
+        <select id="sort">
+            <option value="date_desc">ใหม่ → เก่า</option>
+            <option value="date_asc">เก่า → ใหม่</option>
+            <option value="amount_desc">จำนวนเงินมาก → น้อย</option>
+            <option value="amount_asc">จำนวนเงินน้อย → มาก</option>
+        </select>
+
+        <button id="resetButton" class="filter-reset"
+                type="button" onclick="resetFilters()">รีเซ็ตตัวกรอง</button>
+
+        <div id="resultCount" class="result-count">0 รายการ</div>
+    </div>
+
+    <div class="analysis">
+        <div class="analysis-title">📊 สรุปรายจ่ายตามหมวด</div>
+        <div id="expenseAnalysis">
+            <div class="center">ยังไม่มีรายจ่าย</div>
+        </div>
+    </div>
+
+    <div class="analysis">
+        <div class="analysis-title">💰 สรุปรายรับตามหมวด</div>
+        <div id="incomeAnalysis">
+            <div class="center">ยังไม่มีรายรับ</div>
+        </div>
+    </div>
+
+    <h2>รายการในเดือนนี้</h2>
+    <div id="transactions">
+        <div class="center">กำลังเชื่อมต่อฐานข้อมูล...</div>
+    </div>
+
+    <div id="status" class="status">กำลังเตรียมระบบ...</div>
+</div>
+
+<!-- โหลด Supabase หลัง HTML -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* =========================================================
+   MONEY TRACKER V6
+   จุดสำคัญ:
+   - UI ใช้งานได้โดยไม่ต้องรอ Supabase
+   - เดือนมีค่าเริ่มต้นจาก HTML
+   - ปุ่มเพิ่มรายการใช้ onclick ตรง
+   - Supabase มีหน้าที่เฉพาะข้อมูล
+========================================================= */
+
+var SUPABASE_URL =
+    "https://sbiziifpybyzljikjnrh.supabase.co";
+
+var SUPABASE_KEY =
+    "sb_publishable_aD38PwfPHzSYU83kIbmnEg_rHVMgomF";
+
+var db = null;
+var currentMonth = new Date();
+currentMonth.setDate(1);
+
+var allTransactions = [];
+var editingId = null;
+var databaseReady = false;
+var loadingNumber = 0;
+
+var monthNames = [
+    "มกราคม","กุมภาพันธ์","มีนาคม","เมษายน",
+    "พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม",
+    "กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"
+];
+
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+function updateMonthText() {
+    var name = monthNames[currentMonth.getMonth()];
+    var year = currentMonth.getFullYear() + 543;
+    $("monthText").textContent = name + " " + year;
+}
+
+function getToday() {
+    var d = new Date();
+
+    return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+}
+
+function money(value) {
+    return Number(value || 0).toLocaleString("th-TH", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    });
+}
+
+function categoryName(value) {
+    var names = {
+        Food: "อาหาร",
+        Transport: "เดินทาง",
+        Gaming: "เกม",
+        Roblox: "Roblox",
+        Shopping: "ซื้อของ",
+        Salary: "เงินเดือน",
+        Other: "อื่น ๆ"
+    };
+
+    return names[value] || value || "อื่น ๆ";
+}
+
+function formatDate(value) {
+    if (!value) return "-";
+
+    var p = String(value).split("-");
+
+    if (p.length !== 3) return value;
+
+    return p[2] + "/" + p[1] + "/" + (Number(p[0]) + 543);
+}
+
+function escapeHtml(value) {
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/* =========================================================
+   MONTH
+========================================================= */
+
+function previousMonth() {
+    currentMonth.setMonth(currentMonth.getMonth() - 1);
+    updateMonthText();
+
+    if (databaseReady) {
+        loadTransactions();
+    } else {
+        showNoDatabaseData();
+    }
+}
+
+function nextMonth() {
+    currentMonth.setMonth(currentMonth.getMonth() + 1);
+    updateMonthText();
+
+    if (databaseReady) {
+        loadTransactions();
+    } else {
+        showNoDatabaseData();
+    }
+}
+
+function getMonthRange() {
+    var year = currentMonth.getFullYear();
+    var month = currentMonth.getMonth();
+
+    var start =
+        year + "-" +
+        String(month + 1).padStart(2, "0") +
+        "-01";
+
+    var next = new Date(year, month + 1, 1);
+
+    var end =
+        next.getFullYear() + "-" +
+        String(next.getMonth() + 1).padStart(2, "0") +
+        "-01";
+
+    return {
+        start: start,
+        end: end
+    };
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+function openForm() {
+    editingId = null;
+
+    $("formTitle").textContent = "เพิ่มรายการ";
+    $("type").value = "income";
+    $("amount").value = "";
+    $("category").value = "Food";
+    $("description").value = "";
+    $("date").value = getToday();
+
+    $("form").style.display = "block";
+
+    setTimeout(function() {
+        $("amount").focus();
+    }, 100);
+
+    window.scrollTo({
+        top: $("form").offsetTop - 10,
+        behavior: "smooth"
+    });
+}
+
+function closeForm() {
+    $("form").style.display = "none";
+    editingId = null;
+}
+
+function prepareEdit(item) {
+    editingId = item.id;
+
+    $("formTitle").textContent = "แก้ไขรายการ";
+    $("type").value = item.type;
+    $("amount").value = item.amount;
+    $("category").value = item.category;
+    $("description").value = item.description || "";
+    $("date").value = item.transaction_date;
+
+    $("form").style.display = "block";
+
+    window.scrollTo({
+        top: $("form").offsetTop - 10,
+        behavior: "smooth"
+    });
+}
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function resetFilters() {
+    $("search").value = "";
+    $("typeFilter").value = "all";
+    $("categoryFilter").value = "all";
+    $("sort").value = "date_desc";
+
+    renderFiltered();
+}
+
+function renderFiltered() {
+    var keyword = $("search").value.trim().toLowerCase();
+    var selectedType = $("typeFilter").value;
+    var selectedCategory = $("categoryFilter").value;
+    var selectedSort = $("sort").value;
+
+    var result = allTransactions.filter(function(item) {
+        var text =
+            String(item.description || "").toLowerCase() +
+            " " +
+            String(item.category || "").toLowerCase() +
+            " " +
+            categoryName(item.category).toLowerCase();
+
+        var searchOK =
+            keyword === "" ||
+            text.indexOf(keyword) !== -1;
+
+        var typeOK =
+            selectedType === "all" ||
+            item.type === selectedType;
+
+        var categoryOK =
+            selectedCategory === "all" ||
+            item.category === selectedCategory;
+
+        return searchOK && typeOK && categoryOK;
+    });
+
+    result.sort(function(a, b) {
+        if (selectedSort === "amount_desc") {
+            return Number(b.amount) - Number(a.amount);
+        }
+
+        if (selectedSort === "amount_asc") {
+            return Number(a.amount) - Number(b.amount);
+        }
+
+        if (selectedSort === "date_asc") {
+            return String(a.transaction_date)
+                .localeCompare(String(b.transaction_date));
+        }
+
+        return String(b.transaction_date)
+            .localeCompare(String(a.transaction_date));
+    });
+
+    renderTransactions(result);
+
+    $("resultCount").textContent =
+        result.length + " รายการ";
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+function updateSummary() {
+    var income = 0;
+    var expense = 0;
+
+    allTransactions.forEach(function(item) {
+        var value = Number(item.amount) || 0;
+
+        if (item.type === "income") {
+            income += value;
+        } else if (item.type === "expense") {
+            expense += value;
+        }
+    });
+
+    $("income").textContent = "฿" + money(income);
+    $("expense").textContent = "฿" + money(expense);
+    $("balance").textContent = "฿" + money(income - expense);
+
+    $("balance").classList.remove("green");
+    $("balance").classList.remove("red");
+
+    if (income - expense < 0) {
+        $("balance").classList.add("red");
+    } else {
+        $("balance").classList.add("green");
+    }
+}
+
+/* =========================================================
+   CATEGORY ANALYSIS
+========================================================= */
+
+function renderAnalysis() {
+    var incomeCategories = {};
+    var expenseCategories = {};
+
+    allTransactions.forEach(function(item) {
+        var value = Number(item.amount) || 0;
+
+        if (item.type === "income") {
+            incomeCategories[item.category] =
+                (incomeCategories[item.category] || 0) + value;
+        } else {
+            expenseCategories[item.category] =
+                (expenseCategories[item.category] || 0) + value;
+        }
+    });
+
+    renderCategoryBox(
+        expenseCategories,
+        $("expenseAnalysis"),
+        "ยังไม่มีรายจ่าย"
+    );
+
+    renderCategoryBox(
+        incomeCategories,
+        $("incomeAnalysis"),
+        "ยังไม่มีรายรับ"
+    );
+}
+
+function renderCategoryBox(data, element, emptyText) {
+    var keys = Object.keys(data);
+
+    element.innerHTML = "";
+
+    if (keys.length === 0) {
+        element.innerHTML =
+            '<div class="center">' +
+            emptyText +
+            "</div>";
+
+        return;
+    }
+
+    var total = 0;
+
+    keys.forEach(function(key) {
+        total += Number(data[key]) || 0;
+    });
+
+    keys.sort(function(a, b) {
+        return data[b] - data[a];
+    });
+
+    keys.forEach(function(key) {
+        var value = Number(data[key]) || 0;
+        var percent =
+            total > 0 ? (value / total) * 100 : 0;
+
+        var row = document.createElement("div");
+        row.className = "category";
+
+        row.innerHTML =
+            '<div class="category-top">' +
+                "<span>" +
+                escapeHtml(categoryName(key)) +
+                "</span>" +
+                "<span>฿" +
+                money(value) +
+                " · " +
+                percent.toFixed(1) +
+                "%</span>" +
+            "</div>" +
+            '<div class="bar-bg">' +
+                '<div class="bar" style="width:' +
+                Math.min(percent, 100) +
+                '%"></div>' +
+            "</div>";
+
+        element.appendChild(row);
+    });
+}
+
+/* =========================================================
+   TRANSACTIONS DISPLAY
+========================================================= */
+
+function renderTransactions(data) {
+    var box = $("transactions");
+
+    box.innerHTML = "";
+
+    if (!data.length) {
+        box.innerHTML =
+            '<div class="center">ไม่มีรายการในเดือนนี้</div>';
+
+        return;
+    }
+
+    data.forEach(function(item) {
+        var element = document.createElement("div");
+        element.className = "transaction";
+
+        var value = Number(item.amount) || 0;
+        var income = item.type === "income";
+
+        var main = document.createElement("div");
+        main.className = "transaction-main";
+
+        var left = document.createElement("div");
+        left.className = "transaction-left";
+
+        var name = document.createElement("div");
+        name.className = "transaction-name";
+        name.textContent = categoryName(item.category);
+
+        var detail = document.createElement("div");
+        detail.className = "transaction-detail";
+        detail.textContent = item.description || "";
+
+        var day = document.createElement("div");
+        day.className = "transaction-detail";
+        day.textContent = formatDate(item.transaction_date);
+
+        left.appendChild(name);
+        left.appendChild(detail);
+        left.appendChild(day);
+
+        var valueBox = document.createElement("div");
+        valueBox.className =
+            "transaction-amount " +
+            (income ? "green" : "red");
+
+        valueBox.textContent =
+            (income ? "+" : "-") +
+            "฿" +
+            money(value);
+
+        main.appendChild(left);
+        main.appendChild(valueBox);
+
+        var actions = document.createElement("div");
+        actions.className = "actions";
+
+        var editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "edit";
+        editButton.textContent = "✏️ แก้ไข";
+
+        editButton.onclick = function() {
+            prepareEdit(item);
+        };
+
+        var deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "delete";
+        deleteButton.textContent = "🗑️ ลบ";
+
+        deleteButton.onclick = function() {
+            deleteTransaction(item.id);
+        };
+
+        actions.appendChild(editButton);
+        actions.appendChild(deleteButton);
+
+        element.appendChild(main);
+        element.appendChild(actions);
+
+        box.appendChild(element);
+    });
+}
+
+/* =========================================================
+   SUPABASE INIT
+========================================================= */
+
+async function initializeSupabase() {
+    try {
+        $("status").textContent =
+            "กำลังเชื่อมต่อฐานข้อมูล...";
+
+        if (
+            !window.supabase ||
+            typeof window.supabase.createClient !== "function"
+        ) {
+            throw new Error(
+                "โหลด Supabase JavaScript ไม่สำเร็จ"
+            );
+        }
+
+        db = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+        db.auth.onAuthStateChange(function(event, session) {
+            currentUser = session ? session.user : null;
+
+            /* ไม่ยิง load ซ้ำตอน INITIAL_SESSION เพื่อป้องกัน race */
+            if (event === "SIGNED_IN" || event === "SIGNED_OUT" ||
+                event === "USER_UPDATED") {
+                setTimeout(function() {
+                    refreshAccountUI();
+                    if (databaseReady && event !== "SIGNED_OUT") {
+                        loadTransactions();
+                    }
+                }, 0);
+            }
+        });
+
+        var sessionResult =
+            await db.auth.getSession();
+
+        if (sessionResult.error) {
+            throw sessionResult.error;
+        }
+
+        if (!sessionResult.data.session) {
+            var loginResult =
+                await db.auth.signInAnonymously();
+
+            if (loginResult.error) {
+                throw loginResult.error;
+            }
+        }
+
+        databaseReady = true;
+
+        $("status").textContent =
+            "เชื่อมต่อฐานข้อมูลแล้ว";
+
+        await loadTransactions();
+        await refreshAccountUI();
+
+    } catch (error) {
+        databaseReady = false;
+
+        $("status").textContent =
+            "ฐานข้อมูลยังไม่พร้อม";
+
+        showNoDatabaseData();
+
+        console.error(
+            "Supabase error:",
+            error
+        );
+    }
+}
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+async function loadTransactions() {
+    if (!db) return;
+
+    var requestNumber = ++loadingNumber;
+
+    $("transactions").innerHTML =
+        '<div class="center">กำลังโหลด...</div>';
+
+    try {
+        var userResult =
+            await db.auth.getUser();
+
+        if (userResult.error) {
+            throw userResult.error;
+        }
+
+        var user = userResult.data.user;
+
+        if (!user) {
+            throw new Error("ไม่พบ User");
+        }
+
+        var range = getMonthRange();
+
+        var result =
+            await db
+                .from("transactions")
+                .select("*")
+                .eq("user_id", user.id)
+                .gte(
+                    "transaction_date",
+                    range.start
+                )
+                .lt(
+                    "transaction_date",
+                    range.end
+                )
+                .order(
+                    "transaction_date",
+                    {ascending:false}
+                );
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        /* ถ้ามี request ใหม่กว่า
+           ไม่ให้ request เก่าทับข้อมูล */
+        if (requestNumber !== loadingNumber) {
+            return;
+        }
+
+        allTransactions =
+            Array.isArray(result.data)
+                ? result.data
+                : [];
+
+        updateSummary();
+        renderAnalysis();
+        renderFiltered();
+
+    } catch (error) {
+        if (requestNumber !== loadingNumber) {
+            return;
+        }
+
+        $("transactions").innerHTML =
+            '<div class="error">' +
+                "<strong>โหลดข้อมูลไม่ได้</strong>" +
+                "<br><br>" +
+                escapeHtml(
+                    error.message ||
+                    "Unknown error"
+                ) +
+            "</div>";
+
+        allTransactions = [];
+        updateSummary();
+        renderAnalysis();
+        $("resultCount").textContent =
+            "0 รายการ";
+    }
+}
+
+function showNoDatabaseData() {
+    allTransactions = [];
+
+    updateSummary();
+    renderAnalysis();
+
+    $("transactions").innerHTML =
+        '<div class="center">' +
+        "ยังไม่มีข้อมูลจากฐานข้อมูล" +
+        "</div>";
+
+    $("resultCount").textContent =
+        "0 รายการ";
+}
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function saveTransaction() {
+    if (!databaseReady || !db) {
+        alert(
+            "ฐานข้อมูลยังไม่พร้อม\n\n" +
+            "ตัวหน้าเว็บใช้งานได้แล้ว แต่ Supabase " +
+            "ยังเชื่อมต่อไม่ได้"
+        );
+
+        return;
+    }
+
+    var amountValue =
+        Number($("amount").value);
+
+    if (
+        !Number.isFinite(amountValue) ||
+        amountValue <= 0
+    ) {
+        alert("กรอกจำนวนเงินให้ถูกต้อง");
+        $("amount").focus();
+        return;
+    }
+
+    if (!$("date").value) {
+        alert("เลือกวันที่ก่อน");
+        return;
+    }
+
+    var button = $("saveButton");
+
+    button.disabled = true;
+    button.textContent = "กำลังบันทึก...";
+
+    try {
+        var userResult =
+            await db.auth.getUser();
+
+        if (userResult.error) {
+            throw userResult.error;
+        }
+
+        var user = userResult.data.user;
+
+        if (!user) {
+            throw new Error("ไม่พบ User");
+        }
+
+        var payload = {
+            type: $("type").value,
+            amount: amountValue,
+            category: $("category").value,
+            description:
+                $("description").value.trim(),
+            transaction_date:
+                $("date").value
+        };
+
+        var result;
+
+        if (editingId) {
+            result =
+                await db
+                    .from("transactions")
+                    .update(payload)
+                    .eq("id", editingId)
+                    .eq("user_id", user.id);
+        } else {
+            result =
+                await db
+                    .from("transactions")
+                    .insert({
+                        user_id: user.id,
+                        type: payload.type,
+                        amount: payload.amount,
+                        category: payload.category,
+                        description: payload.description,
+                        transaction_date:
+                            payload.transaction_date
+                    });
+        }
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        closeForm();
+
+        await loadTransactions();
+
+    } catch (error) {
+        alert(
+            "บันทึกไม่สำเร็จ:\n" +
+            (error.message || "Unknown error")
+        );
+    } finally {
+        button.disabled = false;
+        button.textContent = "บันทึก";
+    }
+}
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteTransaction(id) {
+    if (!databaseReady || !db) {
+        alert("ฐานข้อมูลยังไม่พร้อม");
+        return;
+    }
+
+    if (!confirm("ลบรายการนี้ใช่ไหม?")) {
+        return;
+    }
+
+    try {
+        var userResult =
+            await db.auth.getUser();
+
+        if (userResult.error) {
+            throw userResult.error;
+        }
+
+        var user = userResult.data.user;
+
+        if (!user) {
+            throw new Error("ไม่พบ User");
+        }
+
+        var result =
+            await db
+                .from("transactions")
+                .delete()
+                .eq("id", id)
+                .eq("user_id", user.id);
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        await loadTransactions();
+
+    } catch (error) {
+        alert(
+            "ลบไม่สำเร็จ:\n" +
+            (error.message || "Unknown error")
+        );
+    }
+}
+
+
+/* =========================================================
+   ACCOUNT / AUTH
+========================================================= */
+
+var currentUser = null;
+
+async function refreshAccountUI() {
+    if (!db) {
+        $("accountButtonText").textContent = "บัญชี";
+        $("accountStatusTitle").textContent = "ยังไม่เชื่อมต่อ";
+        $("accountStatusText").textContent = "Supabase ยังไม่พร้อม";
+        return;
+    }
+
+    try {
+        var result = await db.auth.getUser();
+
+        if (result.error) throw result.error;
+
+        currentUser = result.data.user || null;
+
+        if (!currentUser) {
+            $("accountButtonText").textContent = "เข้าสู่ระบบ";
+            $("accountStatusTitle").textContent = "ยังไม่มีบัญชี";
+            $("accountStatusText").textContent = "ยังไม่ได้เข้าสู่ระบบ";
+            $("anonymousBox").style.display = "block";
+            $("memberBox").style.display = "none";
+            return;
+        }
+
+        var isAnonymous = currentUser.is_anonymous === true;
+
+        $("accountButtonText").textContent =
+            isAnonymous ? "บัญชี" : "สมาชิก";
+
+        $("accountStatusTitle").textContent =
+            isAnonymous ? "บัญชีชั่วคราว" : "บัญชีถาวร";
+
+        $("accountStatusText").textContent =
+            isAnonymous
+                ? "Anonymous User • ข้อมูลผูกกับ User เดิม"
+                : (currentUser.email || "บัญชีที่ยืนยันแล้ว");
+
+        $("accountAvatarLarge").textContent =
+            isAnonymous ? "👤" : "✓";
+
+        $("anonymousBox").style.display =
+            isAnonymous ? "block" : "none";
+
+        $("memberBox").style.display =
+            isAnonymous ? "none" : "block";
+
+        if (!isAnonymous) {
+            $("accountEmailDisplay").textContent =
+                currentUser.email || "-";
+        }
+    } catch (error) {
+        setAccountMessage("accountMessage",
+            "ตรวจสอบบัญชีไม่ได้: " + (error.message || "Unknown error"),
+            true
+        );
+    }
+}
+
+function openAccount() {
+    $("accountModal").classList.add("open");
+    $("accountModal").setAttribute("aria-hidden","false");
+    refreshAccountUI();
+}
+
+function closeAccount() {
+    $("accountModal").classList.remove("open");
+    $("accountModal").setAttribute("aria-hidden","true");
+}
+
+function setAccountMessage(id, message, isError) {
+    var el = $(id);
+    if (!el) return;
+    el.textContent = message || "";
+    el.className = "account-message" +
+        (message ? (isError ? " error" : " success") : "");
+}
+
+async function upgradeAnonymousAccount() {
+    if (!db || !databaseReady) {
+        setAccountMessage(
+            "accountMessage",
+            "Supabase ยังไม่พร้อม ลองใหม่อีกครั้ง",
+            true
+        );
+        return;
+    }
+
+    var email = $("accountEmail").value.trim();
+    var password = $("accountPassword").value;
+
+    if (!email) {
+        setAccountMessage("accountMessage","กรอกอีเมลก่อน",true);
+        $("accountEmail").focus();
+        return;
+    }
+
+    if (password.length < 6) {
+        setAccountMessage(
+            "accountMessage",
+            "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+            true
+        );
+        $("accountPassword").focus();
+        return;
+    }
+
+    var button = $("upgradeButton");
+    button.disabled = true;
+    button.textContent = "กำลังสร้างบัญชี...";
+
+    setAccountMessage("accountMessage","กำลังผูกบัญชีกับ User เดิม...",false);
+
+    try {
+        var before = await db.auth.getUser();
+
+        if (before.error) throw before.error;
+
+        var oldUser = before.data.user;
+
+        if (!oldUser) {
+            throw new Error("ไม่พบ User ปัจจุบัน");
+        }
+
+        if (oldUser.is_anonymous !== true) {
+            throw new Error("บัญชีนี้เป็นบัญชีถาวรอยู่แล้ว");
+        }
+
+        /*
+         * สำคัญ:
+         * ใช้ updateUser() กับ session ปัจจุบัน
+         * ไม่ใช้ signUp() เพื่อสร้าง User ใหม่
+         */
+        var result = await db.auth.updateUser({
+            email: email,
+            password: password
+        });
+
+        if (result.error) throw result.error;
+
+        var after = await db.auth.getUser();
+
+        if (after.error) throw after.error;
+
+        var newUser = after.data.user;
+
+        if (!newUser) {
+            throw new Error("อ่าน User หลังอัปเกรดไม่ได้");
+        }
+
+        if (newUser.id !== oldUser.id) {
+            throw new Error(
+                "User ID เปลี่ยน ซึ่งไม่ควรเกิดขึ้น ระบบหยุดไว้เพื่อป้องกันข้อมูลผิดบัญชี"
+            );
+        }
+
+        currentUser = newUser;
+
+        setAccountMessage(
+            "accountMessage",
+            "ผูกบัญชีสำเร็จแล้ว User ID เดิมยังคงอยู่\n" +
+            "ถ้า Supabase เปิดยืนยันอีเมล ให้ไปกดยืนยันในอีเมลก่อน",
+            false
+        );
+
+        $("accountEmail").value = "";
+        $("accountPassword").value = "";
+
+        await refreshAccountUI();
+
+        $("status").textContent = "บัญชีถูกผูกกับ User เดิมแล้ว";
+
+    } catch (error) {
+        console.error("Account upgrade error:", error);
+
+        setAccountMessage(
+            "accountMessage",
+            "สร้างบัญชีไม่สำเร็จ:\n" +
+            (error.message || "Unknown error"),
+            true
+        );
+    } finally {
+        button.disabled = false;
+        button.textContent = "🔒 สร้างบัญชีถาวร";
+    }
+}
+
+async function resetPasswordEmail() {
+    if (!db || !currentUser || !currentUser.email) {
+        setAccountMessage(
+            "memberMessage",
+            "ไม่พบอีเมลของบัญชี",
+            true
+        );
+        return;
+    }
+
+    try {
+        var result = await db.auth.resetPasswordForEmail(
+            currentUser.email,
+            {
+                redirectTo: window.location.origin + window.location.pathname
+            }
+        );
+
+        if (result.error) throw result.error;
+
+        setAccountMessage(
+            "memberMessage",
+            "ส่งลิงก์เปลี่ยนรหัสผ่านไปที่ " +
+            currentUser.email + " แล้ว",
+            false
+        );
+    } catch (error) {
+        setAccountMessage(
+            "memberMessage",
+            "ส่งอีเมลไม่สำเร็จ:\n" +
+            (error.message || "Unknown error"),
+            true
+        );
+    }
+}
+
+async function logoutAccount() {
+    if (!db) return;
+
+    var ok = confirm(
+        "ออกจากระบบใช่ไหม?\n\n" +
+        "ถ้าบัญชีนี้เป็นบัญชีถาวร คุณสามารถเข้าสู่ระบบกลับได้"
+    );
+
+    if (!ok) return;
+
+    try {
+        var result = await db.auth.signOut();
+
+        if (result.error) throw result.error;
+
+        currentUser = null;
+        databaseReady = false;
+        allTransactions = [];
+
+        updateSummary();
+        renderAnalysis();
+
+        $("transactions").innerHTML =
+            '<div class="center">ออกจากระบบแล้ว</div>';
+
+        $("status").textContent = "ออกจากระบบแล้ว";
+        closeAccount();
+
+    } catch (error) {
+        alert(
+            "ออกจากระบบไม่สำเร็จ:\n" +
+            (error.message || "Unknown error")
+        );
+    }
+}
+
+
+/* =========================================================
+   SEARCH EVENTS
+========================================================= */
+
+$("search").addEventListener(
+    "input",
+    renderFiltered
+);
+
+$("typeFilter").addEventListener(
+    "change",
+    renderFiltered
+);
+
+$("categoryFilter").addEventListener(
+    "change",
+    renderFiltered
+);
+
+$("sort").addEventListener(
+    "change",
+    renderFiltered
+);
+
+/* =========================================================
+   START
+========================================================= */
+
+updateMonthText();
+$("date").value = getToday();
+
+/*
+   UI ถูกแสดงไปแล้วก่อนมาถึงตรงนี้
+   ดังนั้นแม้ Supabase จะมีปัญหา
+   เดือน + ปุ่มเพิ่มรายการยังต้องทำงาน
+*/
+initializeSupabase();
+
+/* Supabase แจ้งสถานะ login/logout ให้ UI รู้ */
+if (window.supabase && typeof window.supabase.createClient === "function") {
+    /* listener จะถูกผูกหลัง db ถูกสร้าง */
+}
+</script>
+</body>
+</html>
