@@ -1,23 +1,54 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Money Tracker</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+:root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #222222;
+    --muted: #777777;
+    --border: #eeeeee;
+    --input: #ffffff;
+    --button: #111111;
+    --button-text: #ffffff;
+    --bar-bg: #eeeeee;
+}
+
+body.dark {
+    --bg: #111315;
+    --card: #1b1e21;
+    --text: #f1f1f1;
+    --muted: #999999;
+    --border: #303438;
+    --input: #24282c;
+    --button: #f1f1f1;
+    --button-text: #111111;
+    --bar-bg: #33383d;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #f5f6f8;
-    color: #222;
+    background: var(--bg);
+    color: var(--text);
     font-family: Arial, sans-serif;
+    transition: background 0.2s, color 0.2s;
 }
 
 .container {
@@ -35,24 +66,61 @@ h2 {
     margin-top: 25px;
 }
 
-/* MONTH */
+/* =========================
+   HEADER
+========================= */
 
-.month {
-    background: white;
-    border-radius: 14px;
-    padding: 12px;
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.header h1 {
+    margin: 10px 0 20px;
+}
+
+.theme-btn {
+    width: 45px;
+    height: 45px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: var(--card);
+    color: var(--text);
+
+    font-size: 21px;
+}
+
+/* =========================
+   MONTH
+========================= */
+
+.month {
+    background: var(--card);
+
+    border-radius: 14px;
+
+    padding: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     margin-bottom: 15px;
 }
 
 .month button {
     width: 45px;
     height: 42px;
+
     border: 0;
     border-radius: 10px;
-    background: #eee;
+
+    background: var(--border);
+    color: var(--text);
+
     font-size: 24px;
 }
 
@@ -61,27 +129,36 @@ h2 {
     font-size: 18px;
 }
 
-/* SUMMARY */
+/* =========================
+   SUMMARY
+========================= */
 
 .summary {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
     gap: 10px;
 }
 
 .card {
-    background: white;
+    background: var(--card);
+
     padding: 15px;
+
     border-radius: 14px;
 }
 
 .card small {
-    color: #777;
+    color: var(--muted);
 }
 
 .card strong {
     display: block;
+
     margin-top: 8px;
+
     font-size: 19px;
 }
 
@@ -93,78 +170,118 @@ h2 {
     color: #d62828;
 }
 
-/* BUTTON */
+/* =========================
+   ADD BUTTON
+========================= */
 
 .add {
     width: 100%;
+
     padding: 15px;
+
     margin-top: 15px;
+
     border: 0;
     border-radius: 12px;
-    background: #111;
-    color: white;
+
+    background: var(--button);
+    color: var(--button-text);
+
     font-size: 16px;
 }
 
-/* FORM */
+/* =========================
+   FORM
+========================= */
 
 .form {
     display: none;
-    background: white;
+
+    background: var(--card);
+
     padding: 18px;
+
     border-radius: 14px;
+
     margin-top: 15px;
 }
 
 label {
     display: block;
+
     margin-top: 12px;
     margin-bottom: 5px;
+
     font-size: 14px;
 }
 
 input,
 select {
     width: 100%;
+
     padding: 12px;
-    border: 1px solid #ddd;
+
+    border: 1px solid var(--border);
+
     border-radius: 10px;
+
     font-size: 16px;
+
+    background: var(--input);
+    color: var(--text);
 }
 
 .save {
     width: 100%;
+
     margin-top: 18px;
+
     padding: 13px;
+
     border: 0;
     border-radius: 10px;
+
     background: #16803c;
     color: white;
+
     font-size: 16px;
 }
 
 .cancel {
     width: 100%;
+
     margin-top: 8px;
+
     padding: 13px;
+
     border: 0;
     border-radius: 10px;
-    background: #eee;
+
+    background: var(--border);
+    color: var(--text);
+
     font-size: 16px;
 }
 
-/* ANALYSIS */
+/* =========================
+   ANALYSIS
+========================= */
 
 .analysis {
-    background: white;
+    background: var(--card);
+
     border-radius: 14px;
+
     padding: 18px;
+
     margin-top: 20px;
 }
 
 .analysis-title {
     font-weight: bold;
+
     font-size: 18px;
+
     margin-bottom: 15px;
 }
 
@@ -174,35 +291,51 @@ select {
 
 .category-top {
     display: flex;
+
     justify-content: space-between;
+
     margin-bottom: 6px;
+
     font-size: 14px;
 }
 
 .bar-bg {
     height: 8px;
-    background: #eee;
+
+    background: var(--bar-bg);
+
     border-radius: 20px;
+
     overflow: hidden;
 }
 
 .bar {
     height: 100%;
-    background: #222;
+
+    background: var(--text);
+
+    border-radius: 20px;
 }
 
-/* TRANSACTIONS */
+/* =========================
+   TRANSACTION
+========================= */
 
 .transaction {
-    background: white;
+    background: var(--card);
+
     padding: 15px;
+
     border-radius: 13px;
+
     margin-bottom: 10px;
 }
 
 .transaction-main {
     display: flex;
+
     justify-content: space-between;
+
     gap: 10px;
 }
 
@@ -211,34 +344,45 @@ select {
 }
 
 .transaction-detail {
-    color: #777;
+    color: var(--muted);
+
     font-size: 14px;
+
     margin-top: 5px;
 }
 
 .transaction-amount {
     font-weight: bold;
+
     white-space: nowrap;
 }
 
 .actions {
     display: flex;
+
     gap: 8px;
+
     margin-top: 12px;
+
     padding-top: 10px;
-    border-top: 1px solid #eee;
+
+    border-top: 1px solid var(--border);
 }
 
 .edit,
 .delete {
     flex: 1;
+
     padding: 9px;
+
     border: 0;
+
     border-radius: 9px;
 }
 
 .edit {
-    background: #eee;
+    background: var(--border);
+    color: var(--text);
 }
 
 .delete {
@@ -248,67 +392,172 @@ select {
 
 .center {
     text-align: center;
-    color: #777;
+
+    color: var(--muted);
+
     padding: 25px;
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 450px) {
+
     .summary {
         grid-template-columns: 1fr;
     }
+
+    h1 {
+        font-size: 30px;
+    }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>💰 Money Tracker</h1>
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            💰 Money Tracker
+        </h1>
+
+        <button
+            class="theme-btn"
+            id="themeButton"
+            onclick="toggleTheme()">
+
+            🌙
+
+        </button>
+
+    </div>
+
+
+    <!-- MONTH -->
 
     <div class="month">
-        <button onclick="previousMonth()">‹</button>
 
-        <div id="monthText">กำลังโหลด...</div>
+        <button onclick="previousMonth()">
+            ‹
+        </button>
 
-        <button onclick="nextMonth()">›</button>
+        <div id="monthText">
+            กำลังโหลด...
+        </div>
+
+        <button onclick="nextMonth()">
+            ›
+        </button>
+
     </div>
+
+
+    <!-- SUMMARY -->
 
     <div class="summary">
 
         <div class="card">
-            <small>รายรับ</small>
-            <strong id="income" class="green">฿0</strong>
+
+            <small>
+                รายรับ
+            </small>
+
+            <strong
+                id="income"
+                class="green">
+
+                ฿0
+
+            </strong>
+
         </div>
 
-        <div class="card">
-            <small>รายจ่าย</small>
-            <strong id="expense" class="red">฿0</strong>
-        </div>
 
         <div class="card">
-            <small>คงเหลือ</small>
-            <strong id="balance">฿0</strong>
+
+            <small>
+                รายจ่าย
+            </small>
+
+            <strong
+                id="expense"
+                class="red">
+
+                ฿0
+
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <small>
+                คงเหลือ
+            </small>
+
+            <strong id="balance">
+
+                ฿0
+
+            </strong>
+
         </div>
 
     </div>
 
-    <button class="add" onclick="openForm()">
+
+    <!-- ADD -->
+
+    <button
+        class="add"
+        onclick="openForm()">
+
         ＋ เพิ่มรายการ
+
     </button>
 
-    <div class="form" id="form">
 
-        <h2 id="formTitle">เพิ่มรายการ</h2>
+    <!-- FORM -->
 
-        <label>ประเภท</label>
+    <div
+        class="form"
+        id="form">
+
+        <h2 id="formTitle">
+            เพิ่มรายการ
+        </h2>
+
+
+        <label>
+            ประเภท
+        </label>
 
         <select id="type">
-            <option value="income">รายรับ</option>
-            <option value="expense">รายจ่าย</option>
+
+            <option value="income">
+                รายรับ
+            </option>
+
+            <option value="expense">
+                รายจ่าย
+            </option>
+
         </select>
 
-        <label>จำนวนเงิน</label>
+
+        <label>
+            จำนวนเงิน
+        </label>
 
         <input
             id="amount"
@@ -318,19 +567,47 @@ select {
             placeholder="เช่น 500"
         >
 
-        <label>หมวดหมู่</label>
+
+        <label>
+            หมวดหมู่
+        </label>
 
         <select id="category">
-            <option value="Food">อาหาร</option>
-            <option value="Transport">เดินทาง</option>
-            <option value="Gaming">เกม</option>
-            <option value="Roblox">Roblox</option>
-            <option value="Shopping">ซื้อของ</option>
-            <option value="Salary">เงินเดือน</option>
-            <option value="Other">อื่น ๆ</option>
+
+            <option value="Food">
+                อาหาร
+            </option>
+
+            <option value="Transport">
+                เดินทาง
+            </option>
+
+            <option value="Gaming">
+                เกม
+            </option>
+
+            <option value="Roblox">
+                Roblox
+            </option>
+
+            <option value="Shopping">
+                ซื้อของ
+            </option>
+
+            <option value="Salary">
+                เงินเดือน
+            </option>
+
+            <option value="Other">
+                อื่น ๆ
+            </option>
+
         </select>
 
-        <label>รายละเอียด</label>
+
+        <label>
+            รายละเอียด
+        </label>
 
         <input
             id="description"
@@ -338,19 +615,38 @@ select {
             placeholder="เช่น ขายไอเทม"
         >
 
-        <label>วันที่</label>
 
-        <input id="date" type="date">
+        <label>
+            วันที่
+        </label>
 
-        <button class="save" onclick="save()">
+        <input
+            id="date"
+            type="date"
+        >
+
+
+        <button
+            class="save"
+            onclick="saveTransaction()">
+
             บันทึก
+
         </button>
 
-        <button class="cancel" onclick="closeForm()">
+
+        <button
+            class="cancel"
+            onclick="closeForm()">
+
             ยกเลิก
+
         </button>
 
     </div>
+
+
+    <!-- EXPENSE ANALYSIS -->
 
     <div class="analysis">
 
@@ -359,10 +655,17 @@ select {
         </div>
 
         <div id="expenseAnalysis">
-            <div class="center">ยังไม่มีรายจ่าย</div>
+
+            <div class="center">
+                ยังไม่มีรายจ่าย
+            </div>
+
         </div>
 
     </div>
+
+
+    <!-- INCOME ANALYSIS -->
 
     <div class="analysis">
 
@@ -371,20 +674,38 @@ select {
         </div>
 
         <div id="incomeAnalysis">
-            <div class="center">ยังไม่มีรายรับ</div>
+
+            <div class="center">
+                ยังไม่มีรายรับ
+            </div>
+
         </div>
 
     </div>
 
-    <h2>รายการในเดือนนี้</h2>
+
+    <!-- TRANSACTIONS -->
+
+    <h2>
+        รายการในเดือนนี้
+    </h2>
 
     <div id="transactions">
-        <div class="center">กำลังโหลด...</div>
+
+        <div class="center">
+            กำลังโหลด...
+        </div>
+
     </div>
 
 </div>
 
+
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
     "https://sbiziifpybyzljikjnrh.supabase.co";
@@ -392,12 +713,19 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_aD38PwfPHzSYU83kIbmnEg_rHVMgomF";
 
-const db = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-let currentMonth = new Date();
+
+/* =========================
+   STATE
+========================= */
+
+let currentMonth =
+    new Date();
 
 currentMonth.setDate(1);
 
@@ -405,10 +733,11 @@ let editingId = null;
 
 
 /* =========================
-   เดือน
+   MONTHS
 ========================= */
 
 const months = [
+
     "มกราคม",
     "กุมภาพันธ์",
     "มีนาคม",
@@ -421,20 +750,90 @@ const months = [
     "ตุลาคม",
     "พฤศจิกายน",
     "ธันวาคม"
+
 ];
 
 
-function showMonth() {
+/* =========================
+   THEME
+========================= */
 
-    const name =
-        months[currentMonth.getMonth()];
+function loadTheme() {
+
+    const saved =
+        localStorage.getItem(
+            "money-theme"
+        );
+
+
+    if (
+        saved === "dark"
+    ) {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        document.getElementById(
+            "themeButton"
+        ).textContent =
+            "☀️";
+
+    }
+
+}
+
+
+function toggleTheme() {
+
+    const dark =
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "money-theme",
+        dark
+            ? "dark"
+            : "light"
+    );
+
+
+    document.getElementById(
+        "themeButton"
+    ).textContent =
+        dark
+            ? "☀️"
+            : "🌙";
+
+}
+
+
+/* =========================
+   MONTH
+========================= */
+
+function updateMonth() {
+
+    const month =
+        months[
+            currentMonth.getMonth()
+        ];
+
 
     const year =
-        currentMonth.getFullYear() + 543;
+        currentMonth.getFullYear()
+        + 543;
 
-    document.getElementById("monthText")
-        .textContent =
-        name + " " + year;
+
+    document.getElementById(
+        "monthText"
+    ).textContent =
+        month +
+        " " +
+        year;
+
 }
 
 
@@ -444,8 +843,10 @@ function previousMonth() {
         currentMonth.getMonth() - 1
     );
 
-    showMonth();
-    load();
+    updateMonth();
+
+    loadTransactions();
+
 }
 
 
@@ -455,16 +856,18 @@ function nextMonth() {
         currentMonth.getMonth() + 1
     );
 
-    showMonth();
-    load();
+    updateMonth();
+
+    loadTransactions();
+
 }
 
 
 /* =========================
-   ช่วงเดือน
+   MONTH RANGE
 ========================= */
 
-function monthRange() {
+function getMonthRange() {
 
     const year =
         currentMonth.getFullYear();
@@ -472,10 +875,18 @@ function monthRange() {
     const month =
         currentMonth.getMonth();
 
+
     const start =
-        year + "-" +
-        String(month + 1).padStart(2, "0") +
+        year +
+        "-" +
+        String(
+            month + 1
+        ).padStart(
+            2,
+            "0"
+        ) +
         "-01";
+
 
     const next =
         new Date(
@@ -484,146 +895,233 @@ function monthRange() {
             1
         );
 
+
     const end =
-        next.getFullYear() + "-" +
-        String(next.getMonth() + 1).padStart(2, "0") +
+        next.getFullYear() +
+        "-" +
+        String(
+            next.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        ) +
         "-01";
+
 
     return {
         start,
         end
     };
+
 }
 
 
 /* =========================
-   Login
+   LOGIN
 ========================= */
 
 async function login() {
 
-    const session =
+    const result =
         await db.auth.getSession();
 
-    if (session.data.session) {
+
+    if (
+        result.data.session
+    ) {
+
         return true;
+
     }
 
-    const result =
-        await db.auth.signInAnonymously();
 
-    if (result.error) {
+    const loginResult =
+        await db.auth
+            .signInAnonymously();
+
+
+    if (
+        loginResult.error
+    ) {
 
         alert(
             "Login ไม่สำเร็จ: " +
-            result.error.message
+            loginResult.error.message
         );
 
         return false;
+
     }
 
+
     return true;
+
 }
 
 
 /* =========================
-   Form
+   FORM
 ========================= */
 
 function openForm() {
 
     editingId = null;
 
-    document.getElementById("formTitle")
-        .textContent = "เพิ่มรายการ";
 
-    document.getElementById("type")
-        .value = "income";
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "เพิ่มรายการ";
 
-    document.getElementById("amount")
-        .value = "";
 
-    document.getElementById("description")
-        .value = "";
+    document.getElementById(
+        "type"
+    ).value =
+        "income";
+
+
+    document.getElementById(
+        "amount"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        "";
+
 
     setToday();
 
-    document.getElementById("form")
-        .style.display = "block";
+
+    document.getElementById(
+        "form"
+    ).style.display =
+        "block";
+
 }
 
 
 function closeForm() {
 
-    document.getElementById("form")
-        .style.display = "none";
+    document.getElementById(
+        "form"
+    ).style.display =
+        "none";
+
 
     editingId = null;
+
 }
 
 
 function setToday() {
 
-    const d = new Date();
+    const today =
+        new Date();
+
 
     const year =
-        d.getFullYear();
+        today.getFullYear();
+
 
     const month =
-        String(d.getMonth() + 1)
-            .padStart(2, "0");
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
 
     const day =
-        String(d.getDate())
-            .padStart(2, "0");
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
 
-    document.getElementById("date")
-        .value =
-        year + "-" + month + "-" + day;
+
+    document.getElementById(
+        "date"
+    ).value =
+        year +
+        "-" +
+        month +
+        "-" +
+        day;
+
 }
 
 
 /* =========================
-   บันทึก
+   SAVE
 ========================= */
 
-async function save() {
+async function saveTransaction() {
 
     const type =
-        document.getElementById("type").value;
+        document.getElementById(
+            "type"
+        ).value;
+
 
     const amount =
         Number(
-            document.getElementById("amount").value
+            document.getElementById(
+                "amount"
+            ).value
         );
 
+
     const category =
-        document.getElementById("category").value;
+        document.getElementById(
+            "category"
+        ).value;
+
 
     const description =
-        document.getElementById("description")
-            .value
-            .trim();
+        document.getElementById(
+            "description"
+        ).value.trim();
+
 
     const date =
-        document.getElementById("date").value;
+        document.getElementById(
+            "date"
+        ).value;
 
 
-    if (!amount || amount <= 0) {
+    if (
+        !amount ||
+        amount <= 0
+    ) {
 
-        alert("กรอกจำนวนเงินก่อน");
+        alert(
+            "กรอกจำนวนเงินก่อน"
+        );
+
         return;
+
     }
+
 
     if (!date) {
 
-        alert("เลือกวันที่ก่อน");
+        alert(
+            "เลือกวันที่ก่อน"
+        );
+
         return;
+
     }
 
 
     const userResult =
         await db.auth.getUser();
+
 
     const user =
         userResult.data.user;
@@ -631,8 +1129,12 @@ async function save() {
 
     if (!user) {
 
-        alert("ไม่พบ User");
+        alert(
+            "ไม่พบ User"
+        );
+
         return;
+
     }
 
 
@@ -645,14 +1147,27 @@ async function save() {
             await db
                 .from("transactions")
                 .update({
+
                     type: type,
+
                     amount: amount,
+
                     category: category,
+
                     description: description,
-                    transaction_date: date
+
+                    transaction_date:
+                        date
+
                 })
-                .eq("id", editingId)
-                .eq("user_id", user.id);
+                .eq(
+                    "id",
+                    editingId
+                )
+                .eq(
+                    "user_id",
+                    user.id
+                );
 
     } else {
 
@@ -660,17 +1175,29 @@ async function save() {
             await db
                 .from("transactions")
                 .insert({
-                    user_id: user.id,
+
+                    user_id:
+                        user.id,
+
                     type: type,
+
                     amount: amount,
+
                     category: category,
+
                     description: description,
-                    transaction_date: date
+
+                    transaction_date:
+                        date
+
                 });
+
     }
 
 
-    if (result.error) {
+    if (
+        result.error
+    ) {
 
         alert(
             "บันทึกไม่สำเร็จ: " +
@@ -678,28 +1205,37 @@ async function save() {
         );
 
         return;
+
     }
 
 
     closeForm();
 
-    load();
+    loadTransactions();
+
 }
 
 
 /* =========================
-   โหลดรายการ
+   LOAD
 ========================= */
 
-async function load() {
+async function loadTransactions() {
 
-    document.getElementById("transactions")
-        .innerHTML =
-        '<div class="center">กำลังโหลด...</div>';
+    const container =
+        document.getElementById(
+            "transactions"
+        );
+
+
+    container.innerHTML =
+        '<div class="center">' +
+        'กำลังโหลด...' +
+        '</div>';
 
 
     const range =
-        monthRange();
+        getMonthRange();
 
 
     const result =
@@ -717,21 +1253,24 @@ async function load() {
             .order(
                 "transaction_date",
                 {
-                    ascending: false
+                    ascending:
+                        false
                 }
             );
 
 
-    if (result.error) {
+    if (
+        result.error
+    ) {
 
-        document.getElementById("transactions")
-            .innerHTML =
+        container.innerHTML =
             '<div class="center">' +
             'โหลดข้อมูลไม่ได้<br>' +
             result.error.message +
             '</div>';
 
         return;
+
     }
 
 
@@ -740,135 +1279,104 @@ async function load() {
 
 
     let income = 0;
+
     let expense = 0;
 
+
     const incomeCategories = {};
+
     const expenseCategories = {};
 
-
-    const container =
-        document.getElementById("transactions");
 
     container.innerHTML = "";
 
 
-    if (data.length === 0) {
+    if (
+        data.length === 0
+    ) {
 
         container.innerHTML =
             '<div class="center">' +
             'ไม่มีรายการในเดือนนี้' +
             '</div>';
 
-        updateSummary(0, 0);
+
+        updateSummary(
+            0,
+            0
+        );
+
 
         renderCategories(
             {},
             "incomeAnalysis"
         );
 
+
         renderCategories(
             {},
             "expenseAnalysis"
         );
 
+
         return;
+
     }
 
 
-    data.forEach(function(item) {
+    data.forEach(
+        function(item) {
 
-        const value =
-            Number(item.amount);
+            const value =
+                Number(
+                    item.amount
+                );
 
 
-        if (item.type === "income") {
+            if (
+                item.type ===
+                "income"
+            ) {
 
-            income += value;
+                income +=
+                    value;
 
-            incomeCategories[item.category] =
-                (incomeCategories[item.category] || 0)
-                + value;
 
-        } else {
+                incomeCategories[
+                    item.category
+                ] =
+                    (
+                        incomeCategories[
+                            item.category
+                        ] || 0
+                    ) +
+                    value;
 
-            expense += value;
+            } else {
 
-            expenseCategories[item.category] =
-                (expenseCategories[item.category] || 0)
-                + value;
+                expense +=
+                    value;
+
+
+                expenseCategories[
+                    item.category
+                ] =
+                    (
+                        expenseCategories[
+                            item.category
+                        ] || 0
+                    ) +
+                    value;
+
+            }
+
+
+            createTransaction(
+                item
+            );
+
         }
-
-
-        const box =
-            document.createElement("div");
-
-        box.className =
-            "transaction";
-
-
-        const sign =
-            item.type === "income"
-                ? "+"
-                : "-";
-
-        const color =
-            item.type === "income"
-                ? "green"
-                : "red";
-
-
-        box.innerHTML =
-
-            '<div class="transaction-main">' +
-
-                '<div>' +
-
-                    '<div class="transaction-name">' +
-                    categoryName(item.category) +
-                    '</div>' +
-
-                    '<div class="transaction-detail">' +
-                    escape(item.description || "") +
-                    '</div>' +
-
-                    '<div class="transaction-detail">' +
-                    formatDate(item.transaction_date) +
-                    '</div>' +
-
-                '</div>' +
-
-                '<div class="transaction-amount ' +
-                color +
-                '">' +
-                sign +
-                '฿' +
-                value.toLocaleString("th-TH") +
-                '</div>' +
-
-            '</div>' +
-
-            '<div class="actions">' +
-
-                '<button class="edit" ' +
-                'onclick="edit(\'' +
-                item.id +
-                '\')">' +
-                '✏️ แก้ไข' +
-                '</button>' +
-
-                '<button class="delete" ' +
-                'onclick="removeItem(\'' +
-                item.id +
-                '\')">' +
-                '🗑️ ลบ' +
-                '</button>' +
-
-            '</div>';
-
-
-        container.appendChild(box);
-
-    });
+    );
 
 
     updateSummary(
@@ -887,295 +1395,60 @@ async function load() {
         expenseCategories,
         "expenseAnalysis"
     );
+
 }
 
 
 /* =========================
-   Summary
+   CREATE TRANSACTION
 ========================= */
 
-function updateSummary(
-    income,
-    expense
-) {
-
-    document.getElementById("income")
-        .textContent =
-        "฿" +
-        income.toLocaleString("th-TH");
-
-    document.getElementById("expense")
-        .textContent =
-        "฿" +
-        expense.toLocaleString("th-TH");
-
-    document.getElementById("balance")
-        .textContent =
-        "฿" +
-        (income - expense)
-            .toLocaleString("th-TH");
-}
-
-
-/* =========================
-   วิเคราะห์หมวด
-========================= */
-
-function renderCategories(
-    categories,
-    elementId
+function createTransaction(
+    item
 ) {
 
     const container =
-        document.getElementById(elementId);
-
-    container.innerHTML = "";
-
-
-    const keys =
-        Object.keys(categories);
-
-
-    if (keys.length === 0) {
-
-        container.innerHTML =
-            '<div class="center">' +
-            'ยังไม่มีข้อมูล' +
-            '</div>';
-
-        return;
-    }
-
-
-    let total = 0;
-
-    keys.forEach(function(key) {
-        total += categories[key];
-    });
-
-
-    keys.sort(function(a, b) {
-        return categories[b] - categories[a];
-    });
-
-
-    keys.forEach(function(key) {
-
-        const value =
-            categories[key];
-
-        const percent =
-            total === 0
-                ? 0
-                : value / total * 100;
-
-
-        const row =
-            document.createElement("div");
-
-        row.className =
-            "category";
-
-
-        row.innerHTML =
-
-            '<div class="category-top">' +
-
-                '<span>' +
-                categoryName(key) +
-                '</span>' +
-
-                '<span>' +
-                '฿' +
-                value.toLocaleString("th-TH") +
-                ' · ' +
-                percent.toFixed(1) +
-                '%' +
-                '</span>' +
-
-            '</div>' +
-
-            '<div class="bar-bg">' +
-
-                '<div class="bar" style="width:' +
-                percent +
-                '%">' +
-                '</div>' +
-
-            '</div>';
-
-
-        container.appendChild(row);
-
-    });
-}
-
-
-/* =========================
-   แก้ไข
-========================= */
-
-async function edit(id) {
-
-    const result =
-        await db
-            .from("transactions")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-
-    if (result.error) {
-
-        alert("ไม่พบรายการ");
-        return;
-    }
-
-
-    const item =
-        result.data;
-
-
-    editingId = id;
-
-
-    document.getElementById("formTitle")
-        .textContent = "แก้ไขรายการ";
-
-    document.getElementById("type")
-        .value = item.type;
-
-    document.getElementById("amount")
-        .value = item.amount;
-
-    document.getElementById("category")
-        .value = item.category;
-
-    document.getElementById("description")
-        .value = item.description || "";
-
-    document.getElementById("date")
-        .value = item.transaction_date;
-
-    document.getElementById("form")
-        .style.display = "block";
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-
-/* =========================
-   ลบ
-========================= */
-
-async function removeItem(id) {
-
-    if (!confirm("ลบรายการนี้ใช่ไหม?")) {
-        return;
-    }
-
-
-    const result =
-        await db
-            .from("transactions")
-            .delete()
-            .eq("id", id);
-
-
-    if (result.error) {
-
-        alert(
-            "ลบไม่สำเร็จ: " +
-            result.error.message
+        document.getElementById(
+            "transactions"
         );
 
-        return;
-    }
+
+    const value =
+        Number(
+            item.amount
+        );
 
 
-    load();
-}
+    const income =
+        item.type ===
+        "income";
 
 
-/* =========================
-   หมวดภาษาไทย
-========================= */
-
-function categoryName(value) {
-
-    const names = {
-        Food: "อาหาร",
-        Transport: "เดินทาง",
-        Gaming: "เกม",
-        Roblox: "Roblox",
-        Shopping: "ซื้อของ",
-        Salary: "เงินเดือน",
-        Other: "อื่น ๆ"
-    };
-
-    return names[value] || value;
-}
+    const box =
+        document.createElement(
+            "div"
+        );
 
 
-/* =========================
-   วันที่
-========================= */
-
-function formatDate(value) {
-
-    const parts =
-        value.split("-");
-
-    return (
-        parts[2] +
-        "/" +
-        parts[1] +
-        "/" +
-        (Number(parts[0]) + 543)
-    );
-}
+    box.className =
+        "transaction";
 
 
-/* =========================
-   ป้องกัน HTML
-========================= */
+    box.innerHTML =
 
-function escape(value) {
+        '<div class="transaction-main">' +
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+            '<div>' +
 
+                '<div class="transaction-name">' +
+                escapeHtml(
+                    categoryName(
+                        item.category
+                    )
+                ) +
+                '</div>' +
 
-/* =========================
-   START
-========================= */
-
-async function start() {
-
-    showMonth();
-
-    setToday();
-
-    const logged =
-        await login();
-
-    if (logged) {
-        await load();
-    }
-}
-
-
-start();
-
-</script>
-
-</body>
-</html>
+                '<div class="transaction-detail">' +
+                escapeHtml(
+                    item.description || ""
+                ) +
