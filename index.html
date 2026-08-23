@@ -16,99 +16,122 @@
 <style>
 
 /* =====================================================
-   THEME VARIABLES
-===================================================== */
-
-:root {
-    --bg: #f5f6f8;
-    --card: #ffffff;
-    --text: #222222;
-    --muted: #777777;
-    --border: #e8e8e8;
-    --input: #ffffff;
-    --button: #111111;
-    --button-text: #ffffff;
-    --bar: #222222;
-}
-
-body.dark {
-    --bg: #111315;
-    --card: #1b1e21;
-    --text: #f1f1f1;
-    --muted: #999999;
-    --border: #303438;
-    --input: #24282c;
-    --button: #f1f1f1;
-    --button-text: #111111;
-    --bar: #f1f1f1;
-}
-
-
-/* =====================================================
-   RESET
+   BASE
 ===================================================== */
 
 * {
     box-sizing: border-box;
 }
 
+:root {
+
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #222222;
+    --muted: #777777;
+    --border: #eeeeee;
+    --input: #ffffff;
+    --input-border: #dddddd;
+    --button: #111111;
+    --button-text: #ffffff;
+    --bar: #222222;
+
+}
+
+body.dark {
+
+    --bg: #111315;
+    --card: #1b1e21;
+    --text: #f1f1f1;
+    --muted: #999999;
+    --border: #303438;
+    --input: #24282c;
+    --input-border: #3a3f44;
+    --button: #f1f1f1;
+    --button-text: #111111;
+    --bar: #f1f1f1;
+
+}
+
 body {
+
     margin: 0;
+
     background: var(--bg);
+
     color: var(--text);
+
     font-family: Arial, sans-serif;
+
     transition:
-        background 0.2s,
-        color 0.2s;
+        background 0.2s ease,
+        color 0.2s ease;
+
 }
-
-button,
-input,
-select {
-    font-family: inherit;
-}
-
-
-/* =====================================================
-   CONTAINER
-===================================================== */
 
 .container {
-    width: 100%;
+
     max-width: 600px;
+
     margin: auto;
+
     padding: 20px;
+
+}
+
+h1 {
+
+    margin: 10px 0 20px;
+
+    font-size: 32px;
+
+}
+
+h2 {
+
+    margin-top: 25px;
+
 }
 
 
 /* =====================================================
-   HEADER
+   HEADER / THEME BUTTON
 ===================================================== */
 
 .header {
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
 }
 
 .header h1 {
+
     margin: 10px 0 20px;
-    font-size: 30px;
+
 }
 
-.theme-btn {
+.theme-button {
+
     width: 45px;
+
     height: 45px;
 
     border: 0;
+
     border-radius: 12px;
 
     background: var(--card);
+
     color: var(--text);
 
-    font-size: 20px;
+    font-size: 21px;
 
     cursor: pointer;
+
 }
 
 
@@ -117,6 +140,7 @@ select {
 ===================================================== */
 
 .month {
+
     background: var(--card);
 
     border-radius: 14px;
@@ -124,30 +148,41 @@ select {
     padding: 12px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     margin-bottom: 15px;
+
 }
 
 .month button {
+
     width: 45px;
+
     height: 42px;
 
     border: 0;
+
     border-radius: 10px;
 
     background: var(--border);
+
     color: var(--text);
 
     font-size: 24px;
 
     cursor: pointer;
+
 }
 
 #monthText {
-    font-size: 18px;
+
     font-weight: bold;
+
+    font-size: 18px;
+
 }
 
 
@@ -156,40 +191,52 @@ select {
 ===================================================== */
 
 .summary {
+
     display: grid;
 
     grid-template-columns:
         repeat(3, 1fr);
 
     gap: 10px;
+
 }
 
 .card {
+
     background: var(--card);
 
     padding: 15px;
 
     border-radius: 14px;
+
 }
 
 .card small {
+
     color: var(--muted);
+
 }
 
 .card strong {
+
     display: block;
 
     margin-top: 8px;
 
     font-size: 19px;
+
 }
 
 .green {
+
     color: #16803c;
+
 }
 
 .red {
+
     color: #d62828;
+
 }
 
 
@@ -198,6 +245,7 @@ select {
 ===================================================== */
 
 .add {
+
     width: 100%;
 
     padding: 15px;
@@ -205,14 +253,17 @@ select {
     margin-top: 15px;
 
     border: 0;
+
     border-radius: 12px;
 
     background: var(--button);
+
     color: var(--button-text);
 
     font-size: 16px;
 
     cursor: pointer;
+
 }
 
 
@@ -221,6 +272,7 @@ select {
 ===================================================== */
 
 .form {
+
     display: none;
 
     background: var(--card);
@@ -230,45 +282,42 @@ select {
     border-radius: 14px;
 
     margin-top: 15px;
-}
 
-.form h2 {
-    margin-top: 0;
 }
 
 label {
+
     display: block;
 
     margin-top: 12px;
+
     margin-bottom: 5px;
 
     font-size: 14px;
+
 }
 
 input,
 select {
+
     width: 100%;
 
     padding: 12px;
 
-    border: 1px solid var(--border);
+    border: 1px solid var(--input-border);
 
     border-radius: 10px;
 
     font-size: 16px;
 
     background: var(--input);
+
     color: var(--text);
 
-    outline: none;
-}
-
-input:focus,
-select:focus {
-    border-color: #888;
 }
 
 .save {
+
     width: 100%;
 
     margin-top: 18px;
@@ -276,17 +325,21 @@ select:focus {
     padding: 13px;
 
     border: 0;
+
     border-radius: 10px;
 
     background: #16803c;
+
     color: white;
 
     font-size: 16px;
 
     cursor: pointer;
+
 }
 
 .cancel {
+
     width: 100%;
 
     margin-top: 8px;
@@ -294,14 +347,17 @@ select:focus {
     padding: 13px;
 
     border: 0;
+
     border-radius: 10px;
 
     background: var(--border);
+
     color: var(--text);
 
     font-size: 16px;
 
     cursor: pointer;
+
 }
 
 
@@ -310,6 +366,7 @@ select:focus {
 ===================================================== */
 
 .analysis {
+
     background: var(--card);
 
     border-radius: 14px;
@@ -317,32 +374,39 @@ select:focus {
     padding: 18px;
 
     margin-top: 20px;
+
 }
 
 .analysis-title {
-    font-size: 18px;
+
     font-weight: bold;
 
+    font-size: 18px;
+
     margin-bottom: 15px;
+
 }
 
 .category {
+
     margin-bottom: 15px;
+
 }
 
 .category-top {
+
     display: flex;
 
     justify-content: space-between;
 
-    gap: 10px;
-
     margin-bottom: 6px;
 
     font-size: 14px;
+
 }
 
 .bar-bg {
+
     height: 8px;
 
     background: var(--border);
@@ -350,14 +414,15 @@ select:focus {
     border-radius: 20px;
 
     overflow: hidden;
+
 }
 
 .bar {
+
     height: 100%;
 
     background: var(--bar);
 
-    border-radius: 20px;
 }
 
 
@@ -366,6 +431,7 @@ select:focus {
 ===================================================== */
 
 .transaction {
+
     background: var(--card);
 
     padding: 15px;
@@ -373,35 +439,45 @@ select:focus {
     border-radius: 13px;
 
     margin-bottom: 10px;
+
 }
 
 .transaction-main {
+
     display: flex;
 
     justify-content: space-between;
 
     gap: 10px;
+
 }
 
 .transaction-name {
+
     font-weight: bold;
+
 }
 
 .transaction-detail {
+
     color: var(--muted);
 
     font-size: 14px;
 
     margin-top: 5px;
+
 }
 
 .transaction-amount {
+
     font-weight: bold;
 
     white-space: nowrap;
+
 }
 
 .actions {
+
     display: flex;
 
     gap: 8px;
@@ -411,10 +487,12 @@ select:focus {
     padding-top: 10px;
 
     border-top: 1px solid var(--border);
+
 }
 
 .edit,
 .delete {
+
     flex: 1;
 
     padding: 9px;
@@ -424,45 +502,33 @@ select:focus {
     border-radius: 9px;
 
     cursor: pointer;
+
 }
 
 .edit {
+
     background: var(--border);
+
     color: var(--text);
+
 }
 
 .delete {
+
     background: #ffe5e5;
+
     color: #c62828;
+
 }
 
-
-/* =====================================================
-   STATUS
-===================================================== */
-
 .center {
+
     text-align: center;
 
     color: var(--muted);
 
     padding: 25px;
-}
 
-.error-box {
-    background: #ffe5e5;
-
-    color: #b71c1c;
-
-    border-radius: 12px;
-
-    padding: 15px;
-
-    margin-top: 15px;
-
-    font-size: 14px;
-
-    word-break: break-word;
 }
 
 
@@ -473,11 +539,15 @@ select:focus {
 @media (max-width: 450px) {
 
     .summary {
+
         grid-template-columns: 1fr;
+
     }
 
     .header h1 {
-        font-size: 28px;
+
+        font-size: 30px;
+
     }
 
 }
@@ -491,339 +561,331 @@ select:focus {
 <div class="container">
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+    <!-- =================================================
+         HEADER
+    ================================================= -->
 
-<div class="header">
+    <div class="header">
 
-    <h1>
-        💰 Money Tracker
-    </h1>
+        <h1>
+            💰 Money Tracker
+        </h1>
+
+        <button
+            id="themeButton"
+            class="theme-button"
+            onclick="toggleTheme()"
+            type="button">
+
+            🌙
+
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         MONTH
+    ================================================= -->
+
+    <div class="month">
+
+        <button
+            onclick="previousMonth()"
+            type="button">
+
+            ‹
+
+        </button>
+
+
+        <div id="monthText">
+            กำลังโหลด...
+        </div>
+
+
+        <button
+            onclick="nextMonth()"
+            type="button">
+
+            ›
+
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         SUMMARY
+    ================================================= -->
+
+    <div class="summary">
+
+
+        <div class="card">
+
+            <small>
+                รายรับ
+            </small>
+
+            <strong
+                id="income"
+                class="green">
+
+                ฿0
+
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <small>
+                รายจ่าย
+            </small>
+
+            <strong
+                id="expense"
+                class="red">
+
+                ฿0
+
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <small>
+                คงเหลือ
+            </small>
+
+            <strong id="balance">
+
+                ฿0
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =================================================
+         ADD
+    ================================================= -->
 
     <button
-        id="themeButton"
-        class="theme-btn"
-        type="button"
-        onclick="toggleTheme()">
+        class="add"
+        onclick="openForm()"
+        type="button">
 
-        🌙
+        ＋ เพิ่มรายการ
 
     </button>
 
-</div>
+
+    <!-- =================================================
+         FORM
+    ================================================= -->
+
+    <div
+        class="form"
+        id="form">
 
 
-<!-- =====================================================
-     MONTH
-===================================================== -->
-
-<div class="month">
-
-    <button
-        type="button"
-        onclick="previousMonth()">
-
-        ‹
-
-    </button>
+        <h2 id="formTitle">
+            เพิ่มรายการ
+        </h2>
 
 
-    <div id="monthText">
+        <label>
+            ประเภท
+        </label>
 
-        กำลังโหลด...
+
+        <select id="type">
+
+            <option value="income">
+                รายรับ
+            </option>
+
+            <option value="expense">
+                รายจ่าย
+            </option>
+
+        </select>
+
+
+        <label>
+            จำนวนเงิน
+        </label>
+
+
+        <input
+            id="amount"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="เช่น 500"
+        >
+
+
+        <label>
+            หมวดหมู่
+        </label>
+
+
+        <select id="category">
+
+            <option value="Food">
+                อาหาร
+            </option>
+
+            <option value="Transport">
+                เดินทาง
+            </option>
+
+            <option value="Gaming">
+                เกม
+            </option>
+
+            <option value="Roblox">
+                Roblox
+            </option>
+
+            <option value="Shopping">
+                ซื้อของ
+            </option>
+
+            <option value="Salary">
+                เงินเดือน
+            </option>
+
+            <option value="Other">
+                อื่น ๆ
+            </option>
+
+        </select>
+
+
+        <label>
+            รายละเอียด
+        </label>
+
+
+        <input
+            id="description"
+            type="text"
+            placeholder="เช่น ขายไอเทม"
+        >
+
+
+        <label>
+            วันที่
+        </label>
+
+
+        <input
+            id="date"
+            type="date"
+        >
+
+
+        <button
+            class="save"
+            onclick="save()"
+            type="button">
+
+            บันทึก
+
+        </button>
+
+
+        <button
+            class="cancel"
+            onclick="closeForm()"
+            type="button">
+
+            ยกเลิก
+
+        </button>
+
 
     </div>
 
 
-    <button
-        type="button"
-        onclick="nextMonth()">
+    <!-- =================================================
+         EXPENSE
+    ================================================= -->
 
-        ›
-
-    </button>
-
-</div>
+    <div class="analysis">
 
 
-<!-- =====================================================
-     SUMMARY
-===================================================== -->
+        <div class="analysis-title">
 
-<div class="summary">
+            📊 สรุปรายจ่ายตามหมวด
+
+        </div>
 
 
-    <div class="card">
+        <div id="expenseAnalysis">
 
-        <small>
-            รายรับ
-        </small>
+            <div class="center">
+                ยังไม่มีรายจ่าย
+            </div>
 
-        <strong
-            id="income"
-            class="green">
+        </div>
 
-            ฿0
-
-        </strong>
 
     </div>
 
 
-    <div class="card">
+    <!-- =================================================
+         INCOME
+    ================================================= -->
 
-        <small>
-            รายจ่าย
-        </small>
+    <div class="analysis">
 
-        <strong
-            id="expense"
-            class="red">
 
-            ฿0
+        <div class="analysis-title">
 
-        </strong>
+            💰 สรุปรายรับตามหมวด
+
+        </div>
+
+
+        <div id="incomeAnalysis">
+
+            <div class="center">
+                ยังไม่มีรายรับ
+            </div>
+
+        </div>
+
 
     </div>
 
 
-    <div class="card">
+    <!-- =================================================
+         TRANSACTIONS
+    ================================================= -->
 
-        <small>
-            คงเหลือ
-        </small>
-
-        <strong id="balance">
-
-            ฿0
-
-        </strong>
-
-    </div>
-
-
-</div>
-
-
-<!-- =====================================================
-     ADD
-===================================================== -->
-
-<button
-    class="add"
-    type="button"
-    onclick="openForm()">
-
-    ＋ เพิ่มรายการ
-
-</button>
-
-
-<!-- =====================================================
-     FORM
-===================================================== -->
-
-<div
-    class="form"
-    id="form">
-
-
-    <h2 id="formTitle">
-
-        เพิ่มรายการ
-
+    <h2>
+        รายการในเดือนนี้
     </h2>
 
 
-    <label>
-        ประเภท
-    </label>
-
-
-    <select id="type">
-
-        <option value="income">
-            รายรับ
-        </option>
-
-        <option value="expense">
-            รายจ่าย
-        </option>
-
-    </select>
-
-
-    <label>
-        จำนวนเงิน
-    </label>
-
-
-    <input
-        id="amount"
-        type="number"
-        min="0"
-        step="0.01"
-        placeholder="เช่น 500"
-    >
-
-
-    <label>
-        หมวดหมู่
-    </label>
-
-
-    <select id="category">
-
-        <option value="Food">
-            อาหาร
-        </option>
-
-        <option value="Transport">
-            เดินทาง
-        </option>
-
-        <option value="Gaming">
-            เกม
-        </option>
-
-        <option value="Roblox">
-            Roblox
-        </option>
-
-        <option value="Shopping">
-            ซื้อของ
-        </option>
-
-        <option value="Salary">
-            เงินเดือน
-        </option>
-
-        <option value="Other">
-            อื่น ๆ
-        </option>
-
-    </select>
-
-
-    <label>
-        รายละเอียด
-    </label>
-
-
-    <input
-        id="description"
-        type="text"
-        placeholder="เช่น ขายไอเทม"
-    >
-
-
-    <label>
-        วันที่
-    </label>
-
-
-    <input
-        id="date"
-        type="date"
-    >
-
-
-    <button
-        class="save"
-        type="button"
-        onclick="saveTransaction()">
-
-        บันทึก
-
-    </button>
-
-
-    <button
-        class="cancel"
-        type="button"
-        onclick="closeForm()">
-
-        ยกเลิก
-
-    </button>
-
-
-</div>
-
-
-<!-- =====================================================
-     EXPENSE ANALYSIS
-===================================================== -->
-
-<div class="analysis">
-
-    <div class="analysis-title">
-
-        📊 สรุปรายจ่ายตามหมวด
-
-    </div>
-
-
-    <div id="expenseAnalysis">
+    <div id="transactions">
 
         <div class="center">
-
-            ยังไม่มีรายจ่าย
-
+            กำลังโหลด...
         </div>
 
     </div>
-
-</div>
-
-
-<!-- =====================================================
-     INCOME ANALYSIS
-===================================================== -->
-
-<div class="analysis">
-
-    <div class="analysis-title">
-
-        💰 สรุปรายรับตามหมวด
-
-    </div>
-
-
-    <div id="incomeAnalysis">
-
-        <div class="center">
-
-            ยังไม่มีรายรับ
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     TRANSACTIONS
-===================================================== -->
-
-<h2>
-
-    รายการในเดือนนี้
-
-</h2>
-
-
-<div id="transactions">
-
-    <div class="center">
-
-        กำลังโหลด...
-
-    </div>
-
-</div>
 
 
 </div>
@@ -832,7 +894,8 @@ select:focus {
 <script>
 
 /* =====================================================
-   SUPABASE CONFIG
+   SUPABASE
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
 const SUPABASE_URL =
@@ -849,7 +912,8 @@ const db =
 
 
 /* =====================================================
-   GLOBAL STATE
+   STATE
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
 let currentMonth =
@@ -861,10 +925,11 @@ let editingId = null;
 
 
 /* =====================================================
-   MONTH NAMES
+   เดือน
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
-const thaiMonths = [
+const months = [
 
     "มกราคม",
     "กุมภาพันธ์",
@@ -882,186 +947,25 @@ const thaiMonths = [
 ];
 
 
-/* =====================================================
-   CATEGORY NAMES
-===================================================== */
+function showMonth() {
 
-const categoryNames = {
-
-    Food: "อาหาร",
-
-    Transport: "เดินทาง",
-
-    Gaming: "เกม",
-
-    Roblox: "Roblox",
-
-    Shopping: "ซื้อของ",
-
-    Salary: "เงินเดือน",
-
-    Other: "อื่น ๆ"
-
-};
-
-
-/* =====================================================
-   SAFE ELEMENT
-===================================================== */
-
-function getElement(id) {
-
-    return document.getElementById(id);
-
-}
-
-
-/* =====================================================
-   THEME
-===================================================== */
-
-function loadTheme() {
-
-    try {
-
-        const saved =
-            localStorage.getItem(
-                "money-theme"
-            );
-
-
-        if (
-            saved === "dark"
-        ) {
-
-            document.body.classList.add(
-                "dark"
-            );
-
-        }
-
-
-        updateThemeButton();
-
-
-    } catch (error) {
-
-        console.error(
-            "Theme error:",
-            error
-        );
-
-    }
-
-}
-
-
-function updateThemeButton() {
-
-    const button =
-        getElement(
-            "themeButton"
-        );
-
-
-    if (!button) {
-        return;
-    }
-
-
-    button.textContent =
-        document.body.classList.contains(
-            "dark"
-        )
-            ? "☀️"
-            : "🌙";
-
-}
-
-
-function toggleTheme() {
-
-    const isDark =
-        document.body.classList.toggle(
-            "dark"
-        );
-
-
-    try {
-
-        localStorage.setItem(
-            "money-theme",
-            isDark
-                ? "dark"
-                : "light"
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Theme save error:",
-            error
-        );
-
-    }
-
-
-    updateThemeButton();
-
-}
-
-
-/* =====================================================
-   MONTH DISPLAY
-===================================================== */
-
-function updateMonthLabel() {
-
-    const element =
-        getElement(
-            "monthText"
-        );
-
-
-    if (!element) {
-        return;
-    }
-
-
-    const month =
-        thaiMonths[
+    const name =
+        months[
             currentMonth.getMonth()
         ];
 
 
     const year =
-        currentMonth.getFullYear()
-        + 543;
+        currentMonth.getFullYear() + 543;
 
 
-    element.textContent =
-        month +
-        " " +
-        year;
-
-}
-
-
-/*
-   Alias สำรอง
-   กันปัญหาชื่อฟังก์ชันจาก V3/V4
-*/
-
-function updateMonth() {
-
-    updateMonthLabel();
+    document.getElementById(
+        "monthText"
+    ).textContent =
+        name + " " + year;
 
 }
 
-
-/* =====================================================
-   MONTH NAVIGATION
-===================================================== */
 
 function previousMonth() {
 
@@ -1069,11 +973,9 @@ function previousMonth() {
         currentMonth.getMonth() - 1
     );
 
+    showMonth();
 
-    updateMonthLabel();
-
-
-    loadTransactions();
+    load();
 
 }
 
@@ -1084,20 +986,19 @@ function nextMonth() {
         currentMonth.getMonth() + 1
     );
 
+    showMonth();
 
-    updateMonthLabel();
-
-
-    loadTransactions();
+    load();
 
 }
 
 
 /* =====================================================
-   MONTH RANGE
+   ช่วงเดือน
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
-function getMonthRange() {
+function monthRange() {
 
     const year =
         currentMonth.getFullYear();
@@ -1140,73 +1041,60 @@ function getMonthRange() {
 
 
     return {
-        start: start,
-        end: end
+        start,
+        end
     };
 
 }
 
 
 /* =====================================================
-   AUTH
+   Login
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
 async function login() {
 
-    try {
-
-        const sessionResult =
-            await db.auth.getSession();
+    const session =
+        await db.auth.getSession();
 
 
-        if (
-            sessionResult.data &&
-            sessionResult.data.session
-        ) {
-
-            return true;
-
-        }
-
-
-        const result =
-            await db.auth
-                .signInAnonymously();
-
-
-        if (
-            result.error
-        ) {
-
-            showError(
-                "Login ไม่สำเร็จ",
-                result.error.message
-            );
-
-            return false;
-
-        }
-
+    if (
+        session.data.session
+    ) {
 
         return true;
 
+    }
 
-    } catch (error) {
 
-        showError(
-            "เกิดข้อผิดพลาดตอน Login",
-            error.message
+    const result =
+        await db.auth
+            .signInAnonymously();
+
+
+    if (
+        result.error
+    ) {
+
+        alert(
+            "Login ไม่สำเร็จ: " +
+            result.error.message
         );
 
         return false;
 
     }
 
+
+    return true;
+
 }
 
 
 /* =====================================================
-   FORM OPEN
+   Form
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
 function openForm() {
@@ -1214,39 +1102,25 @@ function openForm() {
     editingId = null;
 
 
-    const title =
-        getElement(
-            "formTitle"
-        );
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "เพิ่มรายการ";
 
 
-    if (title) {
-
-        title.textContent =
-            "เพิ่มรายการ";
-
-    }
-
-
-    getElement(
+    document.getElementById(
         "type"
     ).value =
         "income";
 
 
-    getElement(
+    document.getElementById(
         "amount"
     ).value =
         "";
 
 
-    getElement(
-        "category"
-    ).value =
-        "Food";
-
-
-    getElement(
+    document.getElementById(
         "description"
     ).value =
         "";
@@ -1255,30 +1129,17 @@ function openForm() {
     setToday();
 
 
-    getElement(
+    document.getElementById(
         "form"
     ).style.display =
         "block";
 
-
-    window.scrollTo({
-
-        top: 0,
-
-        behavior: "smooth"
-
-    });
-
 }
 
 
-/* =====================================================
-   FORM CLOSE
-===================================================== */
-
 function closeForm() {
 
-    getElement(
+    document.getElementById(
         "form"
     ).style.display =
         "none";
@@ -1289,23 +1150,19 @@ function closeForm() {
 }
 
 
-/* =====================================================
-   TODAY
-===================================================== */
-
 function setToday() {
 
-    const today =
+    const d =
         new Date();
 
 
     const year =
-        today.getFullYear();
+        d.getFullYear();
 
 
     const month =
         String(
-            today.getMonth() + 1
+            d.getMonth() + 1
         ).padStart(
             2,
             "0"
@@ -1314,14 +1171,14 @@ function setToday() {
 
     const day =
         String(
-            today.getDate()
+            d.getDate()
         ).padStart(
             2,
             "0"
         );
 
 
-    getElement(
+    document.getElementById(
         "date"
     ).value =
         year +
@@ -1334,119 +1191,299 @@ function setToday() {
 
 
 /* =====================================================
-   SAVE TRANSACTION
+   บันทึก
+   V3 เดิม — ไม่เปลี่ยน
 ===================================================== */
 
-async function saveTransaction() {
+async function save() {
 
-    try {
-
-        const type =
-            getElement(
-                "type"
-            ).value;
+    const type =
+        document.getElementById(
+            "type"
+        ).value;
 
 
-        const amount =
-            Number(
-                getElement(
-                    "amount"
-                ).value
+    const amount =
+        Number(
+            document.getElementById(
+                "amount"
+            ).value
+        );
+
+
+    const category =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const description =
+        document.getElementById(
+            "description"
+        )
+        .value
+        .trim();
+
+
+    const date =
+        document.getElementById(
+            "date"
+        ).value;
+
+
+    if (
+        !amount ||
+        amount <= 0
+    ) {
+
+        alert(
+            "กรอกจำนวนเงินก่อน"
+        );
+
+        return;
+
+    }
+
+
+    if (!date) {
+
+        alert(
+            "เลือกวันที่ก่อน"
+        );
+
+        return;
+
+    }
+
+
+    const userResult =
+        await db.auth.getUser();
+
+
+    const user =
+        userResult.data.user;
+
+
+    if (!user) {
+
+        alert(
+            "ไม่พบ User"
+        );
+
+        return;
+
+    }
+
+
+    let result;
+
+
+    if (editingId) {
+
+        result =
+            await db
+                .from("transactions")
+                .update({
+
+                    type: type,
+
+                    amount: amount,
+
+                    category: category,
+
+                    description: description,
+
+                    transaction_date:
+                        date
+
+                })
+                .eq(
+                    "id",
+                    editingId
+                )
+                .eq(
+                    "user_id",
+                    user.id
+                );
+
+    } else {
+
+        result =
+            await db
+                .from("transactions")
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    type: type,
+
+                    amount: amount,
+
+                    category: category,
+
+                    description: description,
+
+                    transaction_date:
+                        date
+
+                });
+
+    }
+
+
+    if (
+        result.error
+    ) {
+
+        alert(
+            "บันทึกไม่สำเร็จ: " +
+            result.error.message
+        );
+
+        return;
+
+    }
+
+
+    closeForm();
+
+    load();
+
+}
+
+
+/* =====================================================
+   โหลดรายการ
+   V3 เดิม — ไม่เปลี่ยน
+===================================================== */
+
+async function load() {
+
+    document.getElementById(
+        "transactions"
+    ).innerHTML =
+        '<div class="center">' +
+        'กำลังโหลด...' +
+        '</div>';
+
+
+    const range =
+        monthRange();
+
+
+    const result =
+        await db
+            .from("transactions")
+            .select("*")
+            .gte(
+                "transaction_date",
+                range.start
+            )
+            .lt(
+                "transaction_date",
+                range.end
+            )
+            .order(
+                "transaction_date",
+                {
+                    ascending: false
+                }
             );
 
 
-        const category =
-            getElement(
-                "category"
-            ).value;
+    if (
+        result.error
+    ) {
+
+        document.getElementById(
+            "transactions"
+        ).innerHTML =
+            '<div class="center">' +
+            'โหลดข้อมูลไม่ได้<br>' +
+            result.error.message +
+            '</div>';
+
+        return;
+
+    }
 
 
-        const description =
-            getElement(
-                "description"
-            ).value.trim();
+    const data =
+        result.data || [];
 
 
-        const date =
-            getElement(
-                "date"
-            ).value;
+    let income = 0;
+
+    let expense = 0;
 
 
-        if (
-            !amount ||
-            amount <= 0
-        ) {
+    const incomeCategories = {};
 
-            alert(
-                "กรอกจำนวนเงินก่อน"
-            );
-
-            return;
-
-        }
+    const expenseCategories = {};
 
 
-        if (!category) {
-
-            alert(
-                "เลือกหมวดหมู่ก่อน"
-            );
-
-            return;
-
-        }
+    const container =
+        document.getElementById(
+            "transactions"
+        );
 
 
-        if (!date) {
-
-            alert(
-                "เลือกวันที่ก่อน"
-            );
-
-            return;
-
-        }
+    container.innerHTML = "";
 
 
-        const userResult =
-            await db.auth.getUser();
+    if (
+        data.length === 0
+    ) {
+
+        container.innerHTML =
+            '<div class="center">' +
+            'ไม่มีรายการในเดือนนี้' +
+            '</div>';
 
 
-        const user =
-            userResult.data.user;
+        updateSummary(
+            0,
+            0
+        );
 
 
-        if (!user) {
-
-            alert(
-                "ไม่พบ User"
-            );
-
-            return;
-
-        }
+        renderCategories(
+            {},
+            "incomeAnalysis"
+        );
 
 
-        let result;
+        renderCategories(
+            {},
+            "expenseAnalysis"
+        );
 
 
-        if (editingId) {
+        return;
 
-            result =
-                await db
-                    .from(
-                        "transactions"
-                    )
-                    .update({
+    }
 
-                        type:
-                            type,
 
-                        amount:
-                            amount,
+    data.forEach(
+        function(item) {
 
-                        category:
-                            category,
+            const value =
+                Number(
+                    item.amount
+                );
 
-   
+
+            if (
+                item.type ===
+                "income"
+            ) {
+
+                income += value;
+
+
+                incomeCategories[
+                    item.category
+                ] =
+                    (
+                        incomeC
