@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>Money Tracker</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+:root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #222222;
+    --muted: #777777;
+    --border: #eeeeee;
+    --input: #ffffff;
+    --button: #111111;
+    --button-text: #ffffff;
+    --green: #16803c;
+    --red: #d62828;
+    --bar-bg: #eeeeee;
+}
+
+body.dark {
+    --bg: #111315;
+    --card: #1b1e21;
+    --text: #f1f1f1;
+    --muted: #999999;
+    --border: #2d3135;
+    --input: #24282c;
+    --button: #f1f1f1;
+    --button-text: #111111;
+    --bar-bg: #33383d;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    background: #f5f6f8;
-    color: #222;
+    background: var(--bg);
+    color: var(--text);
     font-family: Arial, sans-serif;
+    transition: background 0.2s, color 0.2s;
 }
 
 .container {
@@ -35,24 +68,53 @@ h2 {
     margin-top: 25px;
 }
 
-/* MONTH */
+/* HEADER */
 
-.month {
-    background: white;
-    border-radius: 14px;
-    padding: 12px;
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
 }
 
+.header h1 {
+    margin: 0;
+}
+
+.theme-btn {
+    width: 45px;
+    height: 45px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 21px;
+}
+
+/* MONTH */
+
+.month {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
 .month button {
     width: 45px;
     height: 42px;
+
     border: 0;
     border-radius: 10px;
-    background: #eee;
+
+    background: var(--border);
+    color: var(--text);
+
     font-size: 24px;
 }
 
@@ -70,13 +132,13 @@ h2 {
 }
 
 .card {
-    background: white;
+    background: var(--card);
     padding: 15px;
     border-radius: 14px;
 }
 
 .card small {
-    color: #777;
+    color: var(--muted);
 }
 
 .card strong {
@@ -86,23 +148,27 @@ h2 {
 }
 
 .green {
-    color: #16803c;
+    color: var(--green);
 }
 
 .red {
-    color: #d62828;
+    color: var(--red);
 }
 
 /* BUTTON */
 
 .add {
     width: 100%;
+
     padding: 15px;
     margin-top: 15px;
+
     border: 0;
     border-radius: 12px;
-    background: #111;
-    color: white;
+
+    background: var(--button);
+    color: var(--button-text);
+
     font-size: 16px;
 }
 
@@ -110,63 +176,100 @@ h2 {
 
 .form {
     display: none;
-    background: white;
+
+    background: var(--card);
+
     padding: 18px;
+
     border-radius: 14px;
+
     margin-top: 15px;
 }
 
 label {
     display: block;
+
     margin-top: 12px;
     margin-bottom: 5px;
+
     font-size: 14px;
 }
 
 input,
 select {
     width: 100%;
+
     padding: 12px;
-    border: 1px solid #ddd;
+
+    border: 1px solid var(--border);
+
     border-radius: 10px;
+
     font-size: 16px;
+
+    background: var(--input);
+    color: var(--text);
+}
+
+.custom-category {
+    display: none;
 }
 
 .save {
     width: 100%;
+
     margin-top: 18px;
+
     padding: 13px;
+
     border: 0;
     border-radius: 10px;
-    background: #16803c;
+
+    background: var(--green);
     color: white;
+
     font-size: 16px;
 }
 
 .cancel {
     width: 100%;
+
     margin-top: 8px;
+
     padding: 13px;
+
     border: 0;
     border-radius: 10px;
-    background: #eee;
+
+    background: var(--border);
+    color: var(--text);
+
     font-size: 16px;
 }
 
-/* ANALYSIS */
+/* CARD */
 
-.analysis {
-    background: white;
+.analysis,
+.chart-card {
+    background: var(--card);
+
     border-radius: 14px;
+
     padding: 18px;
+
     margin-top: 20px;
 }
 
-.analysis-title {
+.analysis-title,
+.chart-title {
     font-weight: bold;
+
     font-size: 18px;
+
     margin-bottom: 15px;
 }
+
+/* CATEGORY */
 
 .category {
     margin-bottom: 15px;
@@ -174,35 +277,143 @@ select {
 
 .category-top {
     display: flex;
+
     justify-content: space-between;
+
     margin-bottom: 6px;
+
     font-size: 14px;
 }
 
 .bar-bg {
     height: 8px;
-    background: #eee;
+
+    background: var(--bar-bg);
+
     border-radius: 20px;
+
     overflow: hidden;
 }
 
 .bar {
     height: 100%;
-    background: #222;
+
+    background: var(--text);
+
+    border-radius: 20px;
+}
+
+/* CHART */
+
+.chart {
+    height: 210px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+    padding-top: 25px;
+}
+
+.chart-column {
+    flex: 1;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    align-items: center;
+}
+
+.chart-bars {
+    width: 100%;
+
+    height: 160px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: center;
+
+    gap: 4px;
+}
+
+.chart-bar {
+    width: 16px;
+
+    min-height: 2px;
+
+    border-radius: 5px 5px 0 0;
+}
+
+.chart-income {
+    background: var(--green);
+}
+
+.chart-expense {
+    background: var(--red);
+}
+
+.chart-label {
+    margin-top: 7px;
+
+    font-size: 11px;
+
+    color: var(--muted);
+}
+
+.chart-legend {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 18px;
+
+    margin-top: 12px;
+
+    font-size: 13px;
+}
+
+.legend-income::before {
+    content: "●";
+
+    color: var(--green);
+
+    margin-right: 5px;
+}
+
+.legend-expense::before {
+    content: "●";
+
+    color: var(--red);
+
+    margin-right: 5px;
 }
 
 /* TRANSACTIONS */
 
 .transaction {
-    background: white;
+    background: var(--card);
+
     padding: 15px;
+
     border-radius: 13px;
+
     margin-bottom: 10px;
 }
 
 .transaction-main {
     display: flex;
+
     justify-content: space-between;
+
     gap: 10px;
 }
 
@@ -211,34 +422,45 @@ select {
 }
 
 .transaction-detail {
-    color: #777;
+    color: var(--muted);
+
     font-size: 14px;
+
     margin-top: 5px;
 }
 
 .transaction-amount {
     font-weight: bold;
+
     white-space: nowrap;
 }
 
 .actions {
     display: flex;
+
     gap: 8px;
+
     margin-top: 12px;
+
     padding-top: 10px;
-    border-top: 1px solid #eee;
+
+    border-top: 1px solid var(--border);
 }
 
 .edit,
 .delete {
     flex: 1;
+
     padding: 9px;
+
     border: 0;
+
     border-radius: 9px;
 }
 
 .edit {
-    background: #eee;
+    background: var(--border);
+    color: var(--text);
 }
 
 .delete {
@@ -248,67 +470,176 @@ select {
 
 .center {
     text-align: center;
-    color: #777;
+
+    color: var(--muted);
+
     padding: 25px;
 }
 
+/* MOBILE */
+
 @media (max-width: 450px) {
+
     .summary {
         grid-template-columns: 1fr;
     }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .chart-bars {
+        gap: 2px;
+    }
+
+    .chart-bar {
+        width: 12px;
+    }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>💰 Money Tracker</h1>
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>💰 Money Tracker</h1>
+
+        <button
+            class="theme-btn"
+            onclick="toggleTheme()"
+            id="themeButton">
+
+            🌙
+
+        </button>
+
+    </div>
+
+
+    <!-- MONTH -->
 
     <div class="month">
-        <button onclick="previousMonth()">‹</button>
 
-        <div id="monthText">กำลังโหลด...</div>
+        <button onclick="previousMonth()">
+            ‹
+        </button>
 
-        <button onclick="nextMonth()">›</button>
+        <div id="monthText">
+            กำลังโหลด...
+        </div>
+
+        <button onclick="nextMonth()">
+            ›
+        </button>
+
     </div>
+
+
+    <!-- SUMMARY -->
 
     <div class="summary">
 
         <div class="card">
-            <small>รายรับ</small>
-            <strong id="income" class="green">฿0</strong>
+
+            <small>
+                รายรับ
+            </small>
+
+            <strong
+                id="income"
+                class="green">
+
+                ฿0
+
+            </strong>
+
         </div>
 
-        <div class="card">
-            <small>รายจ่าย</small>
-            <strong id="expense" class="red">฿0</strong>
-        </div>
 
         <div class="card">
-            <small>คงเหลือ</small>
-            <strong id="balance">฿0</strong>
+
+            <small>
+                รายจ่าย
+            </small>
+
+            <strong
+                id="expense"
+                class="red">
+
+                ฿0
+
+            </strong>
+
+        </div>
+
+
+        <div class="card">
+
+            <small>
+                คงเหลือ
+            </small>
+
+            <strong id="balance">
+
+                ฿0
+
+            </strong>
+
         </div>
 
     </div>
 
-    <button class="add" onclick="openForm()">
+
+    <!-- ADD -->
+
+    <button
+        class="add"
+        onclick="openForm()">
+
         ＋ เพิ่มรายการ
+
     </button>
 
-    <div class="form" id="form">
 
-        <h2 id="formTitle">เพิ่มรายการ</h2>
+    <!-- FORM -->
 
-        <label>ประเภท</label>
+    <div
+        class="form"
+        id="form">
+
+        <h2 id="formTitle">
+            เพิ่มรายการ
+        </h2>
+
+
+        <label>
+            ประเภท
+        </label>
 
         <select id="type">
-            <option value="income">รายรับ</option>
-            <option value="expense">รายจ่าย</option>
+
+            <option value="income">
+                รายรับ
+            </option>
+
+            <option value="expense">
+                รายจ่าย
+            </option>
+
         </select>
 
-        <label>จำนวนเงิน</label>
+
+        <label>
+            จำนวนเงิน
+        </label>
 
         <input
             id="amount"
@@ -318,19 +649,38 @@ select {
             placeholder="เช่น 500"
         >
 
-        <label>หมวดหมู่</label>
 
-        <select id="category">
-            <option value="Food">อาหาร</option>
-            <option value="Transport">เดินทาง</option>
-            <option value="Gaming">เกม</option>
-            <option value="Roblox">Roblox</option>
-            <option value="Shopping">ซื้อของ</option>
-            <option value="Salary">เงินเดือน</option>
-            <option value="Other">อื่น ๆ</option>
+        <label>
+            หมวดหมู่
+        </label>
+
+        <select
+            id="category"
+            onchange="categoryChanged()">
+
         </select>
 
-        <label>รายละเอียด</label>
+
+        <div
+            class="custom-category"
+            id="customCategoryBox">
+
+            <label>
+                ชื่อหมวดหมู่ใหม่
+            </label>
+
+            <input
+                id="customCategory"
+                type="text"
+                placeholder="เช่น ค่าอินเทอร์เน็ต"
+            >
+
+        </div>
+
+
+        <label>
+            รายละเอียด
+        </label>
 
         <input
             id="description"
@@ -338,19 +688,69 @@ select {
             placeholder="เช่น ขายไอเทม"
         >
 
-        <label>วันที่</label>
 
-        <input id="date" type="date">
+        <label>
+            วันที่
+        </label>
 
-        <button class="save" onclick="save()">
+        <input
+            id="date"
+            type="date"
+        >
+
+
+        <button
+            class="save"
+            onclick="save()">
+
             บันทึก
+
         </button>
 
-        <button class="cancel" onclick="closeForm()">
+
+        <button
+            class="cancel"
+            onclick="closeForm()">
+
             ยกเลิก
+
         </button>
 
     </div>
+
+
+    <!-- 6 MONTH CHART -->
+
+    <div class="chart-card">
+
+        <div class="chart-title">
+            📈 ภาพรวม 6 เดือน
+        </div>
+
+        <div id="chart">
+
+            <div class="center">
+                กำลังโหลด...
+            </div>
+
+        </div>
+
+        <div class="chart-legend">
+
+            <span class="legend-income">
+                รายรับ
+            </span>
+
+            <span class="legend-expense">
+                รายจ่าย
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXPENSE -->
 
     <div class="analysis">
 
@@ -359,10 +759,17 @@ select {
         </div>
 
         <div id="expenseAnalysis">
-            <div class="center">ยังไม่มีรายจ่าย</div>
+
+            <div class="center">
+                ยังไม่มีรายจ่าย
+            </div>
+
         </div>
 
     </div>
+
+
+    <!-- INCOME -->
 
     <div class="analysis">
 
@@ -371,20 +778,38 @@ select {
         </div>
 
         <div id="incomeAnalysis">
-            <div class="center">ยังไม่มีรายรับ</div>
+
+            <div class="center">
+                ยังไม่มีรายรับ
+            </div>
+
         </div>
 
     </div>
 
-    <h2>รายการในเดือนนี้</h2>
+
+    <!-- TRANSACTIONS -->
+
+    <h2>
+        รายการในเดือนนี้
+    </h2>
 
     <div id="transactions">
-        <div class="center">กำลังโหลด...</div>
+
+        <div class="center">
+            กำลังโหลด...
+        </div>
+
     </div>
 
 </div>
 
+
 <script>
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
     "https://sbiziifpybyzljikjnrh.supabase.co";
@@ -392,23 +817,50 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_aD38PwfPHzSYU83kIbmnEg_rHVMgomF";
 
-const db = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-let currentMonth = new Date();
+
+/* =========================
+   STATE
+========================= */
+
+let currentMonth =
+    new Date();
 
 currentMonth.setDate(1);
 
 let editingId = null;
 
+let allCategories = [];
+
 
 /* =========================
-   เดือน
+   DEFAULT CATEGORIES
+========================= */
+
+const defaultCategories = [
+
+    "อาหาร",
+    "เดินทาง",
+    "เกม",
+    "Roblox",
+    "ซื้อของ",
+    "เงินเดือน",
+    "อื่น ๆ"
+
+];
+
+
+/* =========================
+   MONTH
 ========================= */
 
 const months = [
+
     "มกราคม",
     "กุมภาพันธ์",
     "มีนาคม",
@@ -421,19 +873,24 @@ const months = [
     "ตุลาคม",
     "พฤศจิกายน",
     "ธันวาคม"
+
 ];
 
 
 function showMonth() {
 
     const name =
-        months[currentMonth.getMonth()];
+        months[
+            currentMonth.getMonth()
+        ];
 
     const year =
-        currentMonth.getFullYear() + 543;
+        currentMonth.getFullYear()
+        + 543;
 
-    document.getElementById("monthText")
-        .textContent =
+    document.getElementById(
+        "monthText"
+    ).textContent =
         name + " " + year;
 }
 
@@ -445,7 +902,9 @@ function previousMonth() {
     );
 
     showMonth();
+
     load();
+
 }
 
 
@@ -456,26 +915,32 @@ function nextMonth() {
     );
 
     showMonth();
+
     load();
+
 }
 
 
 /* =========================
-   ช่วงเดือน
+   MONTH RANGE
 ========================= */
 
-function monthRange() {
+function monthRange(date) {
 
     const year =
-        currentMonth.getFullYear();
+        date.getFullYear();
 
     const month =
-        currentMonth.getMonth();
+        date.getMonth();
+
 
     const start =
-        year + "-" +
-        String(month + 1).padStart(2, "0") +
+        year +
+        "-" +
+        String(month + 1)
+            .padStart(2, "0") +
         "-01";
+
 
     const next =
         new Date(
@@ -484,20 +949,77 @@ function monthRange() {
             1
         );
 
+
     const end =
-        next.getFullYear() + "-" +
-        String(next.getMonth() + 1).padStart(2, "0") +
+        next.getFullYear() +
+        "-" +
+        String(
+            next.getMonth() + 1
+        ).padStart(2, "0") +
         "-01";
+
 
     return {
         start,
         end
     };
+
 }
 
 
 /* =========================
-   Login
+   THEME
+========================= */
+
+function loadTheme() {
+
+    const saved =
+        localStorage.getItem(
+            "money-theme"
+        );
+
+
+    if (saved === "dark") {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        document.getElementById(
+            "themeButton"
+        ).textContent = "☀️";
+
+    }
+
+}
+
+
+function toggleTheme() {
+
+    const dark =
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+    localStorage.setItem(
+        "money-theme",
+        dark ? "dark" : "light"
+    );
+
+
+    document.getElementById(
+        "themeButton"
+    ).textContent =
+        dark
+            ? "☀️"
+            : "🌙";
+
+}
+
+
+/* =========================
+   LOGIN
 ========================= */
 
 async function login() {
@@ -505,12 +1027,18 @@ async function login() {
     const session =
         await db.auth.getSession();
 
+
     if (session.data.session) {
+
         return true;
+
     }
 
+
     const result =
-        await db.auth.signInAnonymously();
+        await db.auth
+            .signInAnonymously();
+
 
     if (result.error) {
 
@@ -520,110 +1048,375 @@ async function login() {
         );
 
         return false;
+
     }
 
+
     return true;
+
 }
 
 
 /* =========================
-   Form
+   LOAD CATEGORIES
+========================= */
+
+async function loadCategories() {
+
+    const result =
+        await db
+            .from("transactions")
+            .select("category");
+
+
+    if (result.error) {
+
+        console.error(
+            result.error
+        );
+
+        allCategories =
+            [...defaultCategories];
+
+    } else {
+
+        const fromDatabase =
+            (result.data || [])
+                .map(
+                    item =>
+                        item.category
+                )
+                .filter(
+                    Boolean
+                );
+
+
+        allCategories =
+            [
+                ...new Set([
+                    ...defaultCategories,
+                    ...fromDatabase
+                ])
+            ];
+
+    }
+
+
+    renderCategorySelect();
+
+}
+
+
+/* =========================
+   CATEGORY SELECT
+========================= */
+
+function renderCategorySelect(
+    selected = ""
+) {
+
+    const select =
+        document.getElementById(
+            "category"
+        );
+
+
+    select.innerHTML = "";
+
+
+    allCategories.forEach(
+        category => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                category;
+
+            option.textContent =
+                category;
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    const custom =
+        document.createElement(
+            "option"
+        );
+
+    custom.value =
+        "__custom__";
+
+    custom.textContent =
+        "＋ เพิ่มหมวดหมู่ใหม่";
+
+    select.appendChild(
+        custom
+    );
+
+
+    if (selected) {
+
+        if (
+            allCategories.includes(
+                selected
+            )
+        ) {
+
+            select.value =
+                selected;
+
+        } else {
+
+            select.value =
+                "__custom__";
+
+            document.getElementById(
+                "customCategory"
+            ).value =
+                selected;
+
+            categoryChanged();
+
+        }
+
+    }
+
+}
+
+
+function categoryChanged() {
+
+    const value =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const box =
+        document.getElementById(
+            "customCategoryBox"
+        );
+
+
+    if (value === "__custom__") {
+
+        box.style.display =
+            "block";
+
+    } else {
+
+        box.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================
+   FORM
 ========================= */
 
 function openForm() {
 
     editingId = null;
 
-    document.getElementById("formTitle")
-        .textContent = "เพิ่มรายการ";
 
-    document.getElementById("type")
-        .value = "income";
+    document.getElementById(
+        "formTitle"
+    ).textContent =
+        "เพิ่มรายการ";
 
-    document.getElementById("amount")
-        .value = "";
 
-    document.getElementById("description")
-        .value = "";
+    document.getElementById(
+        "type"
+    ).value =
+        "income";
+
+
+    document.getElementById(
+        "amount"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "description"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "customCategory"
+    ).value =
+        "";
+
+
+    renderCategorySelect();
+
 
     setToday();
 
-    document.getElementById("form")
-        .style.display = "block";
+
+    document.getElementById(
+        "form"
+    ).style.display =
+        "block";
+
 }
 
 
 function closeForm() {
 
-    document.getElementById("form")
-        .style.display = "none";
+    document.getElementById(
+        "form"
+    ).style.display =
+        "none";
 
     editingId = null;
+
 }
 
 
 function setToday() {
 
-    const d = new Date();
+    const date =
+        new Date();
 
     const year =
-        d.getFullYear();
+        date.getFullYear();
 
     const month =
-        String(d.getMonth() + 1)
-            .padStart(2, "0");
+        String(
+            date.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
 
     const day =
-        String(d.getDate())
-            .padStart(2, "0");
+        String(
+            date.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
 
-    document.getElementById("date")
-        .value =
-        year + "-" + month + "-" + day;
+
+    document.getElementById(
+        "date"
+    ).value =
+        year +
+        "-" +
+        month +
+        "-" +
+        day;
+
 }
 
 
 /* =========================
-   บันทึก
+   SAVE
 ========================= */
 
 async function save() {
 
     const type =
-        document.getElementById("type").value;
+        document.getElementById(
+            "type"
+        ).value;
+
 
     const amount =
         Number(
-            document.getElementById("amount").value
+            document.getElementById(
+                "amount"
+            ).value
         );
 
-    const category =
-        document.getElementById("category").value;
+
+    let category =
+        document.getElementById(
+            "category"
+        ).value;
+
+
+    const custom =
+        document.getElementById(
+            "customCategory"
+        ).value.trim();
+
+
+    if (
+        category ===
+        "__custom__"
+    ) {
+
+        category =
+            custom;
+
+    }
+
 
     const description =
-        document.getElementById("description")
-            .value
-            .trim();
+        document.getElementById(
+            "description"
+        ).value.trim();
+
 
     const date =
-        document.getElementById("date").value;
+        document.getElementById(
+            "date"
+        ).value;
 
 
-    if (!amount || amount <= 0) {
+    if (
+        !amount ||
+        amount <= 0
+    ) {
 
-        alert("กรอกจำนวนเงินก่อน");
+        alert(
+            "กรอกจำนวนเงินก่อน"
+        );
+
         return;
+
     }
+
+
+    if (!category) {
+
+        alert(
+            "กรอกหมวดหมู่ก่อน"
+        );
+
+        return;
+
+    }
+
 
     if (!date) {
 
-        alert("เลือกวันที่ก่อน");
+        alert(
+            "เลือกวันที่ก่อน"
+        );
+
         return;
+
     }
 
 
     const userResult =
         await db.auth.getUser();
+
 
     const user =
         userResult.data.user;
@@ -631,8 +1424,12 @@ async function save() {
 
     if (!user) {
 
-        alert("ไม่พบ User");
+        alert(
+            "ไม่พบ User"
+        );
+
         return;
+
     }
 
 
@@ -645,14 +1442,23 @@ async function save() {
             await db
                 .from("transactions")
                 .update({
-                    type: type,
-                    amount: amount,
-                    category: category,
-                    description: description,
-                    transaction_date: date
+
+                    type,
+                    amount,
+                    category,
+                    description,
+                    transaction_date:
+                        date
+
                 })
-                .eq("id", editingId)
-                .eq("user_id", user.id);
+                .eq(
+                    "id",
+                    editingId
+                )
+                .eq(
+                    "user_id",
+                    user.id
+                );
 
     } else {
 
@@ -660,13 +1466,19 @@ async function save() {
             await db
                 .from("transactions")
                 .insert({
-                    user_id: user.id,
-                    type: type,
-                    amount: amount,
-                    category: category,
-                    description: description,
-                    transaction_date: date
+
+                    user_id:
+                        user.id,
+
+                    type,
+                    amount,
+                    category,
+                    description,
+                    transaction_date:
+                        date
+
                 });
+
     }
 
 
@@ -678,504 +1490,16 @@ async function save() {
         );
 
         return;
+
     }
 
 
     closeForm();
 
-    load();
+    await load();
+
 }
 
 
 /* =========================
-   โหลดรายการ
-========================= */
-
-async function load() {
-
-    document.getElementById("transactions")
-        .innerHTML =
-        '<div class="center">กำลังโหลด...</div>';
-
-
-    const range =
-        monthRange();
-
-
-    const result =
-        await db
-            .from("transactions")
-            .select("*")
-            .gte(
-                "transaction_date",
-                range.start
-            )
-            .lt(
-                "transaction_date",
-                range.end
-            )
-            .order(
-                "transaction_date",
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (result.error) {
-
-        document.getElementById("transactions")
-            .innerHTML =
-            '<div class="center">' +
-            'โหลดข้อมูลไม่ได้<br>' +
-            result.error.message +
-            '</div>';
-
-        return;
-    }
-
-
-    const data =
-        result.data || [];
-
-
-    let income = 0;
-    let expense = 0;
-
-    const incomeCategories = {};
-    const expenseCategories = {};
-
-
-    const container =
-        document.getElementById("transactions");
-
-    container.innerHTML = "";
-
-
-    if (data.length === 0) {
-
-        container.innerHTML =
-            '<div class="center">' +
-            'ไม่มีรายการในเดือนนี้' +
-            '</div>';
-
-        updateSummary(0, 0);
-
-        renderCategories(
-            {},
-            "incomeAnalysis"
-        );
-
-        renderCategories(
-            {},
-            "expenseAnalysis"
-        );
-
-        return;
-    }
-
-
-    data.forEach(function(item) {
-
-        const value =
-            Number(item.amount);
-
-
-        if (item.type === "income") {
-
-            income += value;
-
-            incomeCategories[item.category] =
-                (incomeCategories[item.category] || 0)
-                + value;
-
-        } else {
-
-            expense += value;
-
-            expenseCategories[item.category] =
-                (expenseCategories[item.category] || 0)
-                + value;
-        }
-
-
-        const box =
-            document.createElement("div");
-
-        box.className =
-            "transaction";
-
-
-        const sign =
-            item.type === "income"
-                ? "+"
-                : "-";
-
-        const color =
-            item.type === "income"
-                ? "green"
-                : "red";
-
-
-        box.innerHTML =
-
-            '<div class="transaction-main">' +
-
-                '<div>' +
-
-                    '<div class="transaction-name">' +
-                    categoryName(item.category) +
-                    '</div>' +
-
-                    '<div class="transaction-detail">' +
-                    escape(item.description || "") +
-                    '</div>' +
-
-                    '<div class="transaction-detail">' +
-                    formatDate(item.transaction_date) +
-                    '</div>' +
-
-                '</div>' +
-
-                '<div class="transaction-amount ' +
-                color +
-                '">' +
-                sign +
-                '฿' +
-                value.toLocaleString("th-TH") +
-                '</div>' +
-
-            '</div>' +
-
-            '<div class="actions">' +
-
-                '<button class="edit" ' +
-                'onclick="edit(\'' +
-                item.id +
-                '\')">' +
-                '✏️ แก้ไข' +
-                '</button>' +
-
-                '<button class="delete" ' +
-                'onclick="removeItem(\'' +
-                item.id +
-                '\')">' +
-                '🗑️ ลบ' +
-                '</button>' +
-
-            '</div>';
-
-
-        container.appendChild(box);
-
-    });
-
-
-    updateSummary(
-        income,
-        expense
-    );
-
-
-    renderCategories(
-        incomeCategories,
-        "incomeAnalysis"
-    );
-
-
-    renderCategories(
-        expenseCategories,
-        "expenseAnalysis"
-    );
-}
-
-
-/* =========================
-   Summary
-========================= */
-
-function updateSummary(
-    income,
-    expense
-) {
-
-    document.getElementById("income")
-        .textContent =
-        "฿" +
-        income.toLocaleString("th-TH");
-
-    document.getElementById("expense")
-        .textContent =
-        "฿" +
-        expense.toLocaleString("th-TH");
-
-    document.getElementById("balance")
-        .textContent =
-        "฿" +
-        (income - expense)
-            .toLocaleString("th-TH");
-}
-
-
-/* =========================
-   วิเคราะห์หมวด
-========================= */
-
-function renderCategories(
-    categories,
-    elementId
-) {
-
-    const container =
-        document.getElementById(elementId);
-
-    container.innerHTML = "";
-
-
-    const keys =
-        Object.keys(categories);
-
-
-    if (keys.length === 0) {
-
-        container.innerHTML =
-            '<div class="center">' +
-            'ยังไม่มีข้อมูล' +
-            '</div>';
-
-        return;
-    }
-
-
-    let total = 0;
-
-    keys.forEach(function(key) {
-        total += categories[key];
-    });
-
-
-    keys.sort(function(a, b) {
-        return categories[b] - categories[a];
-    });
-
-
-    keys.forEach(function(key) {
-
-        const value =
-            categories[key];
-
-        const percent =
-            total === 0
-                ? 0
-                : value / total * 100;
-
-
-        const row =
-            document.createElement("div");
-
-        row.className =
-            "category";
-
-
-        row.innerHTML =
-
-            '<div class="category-top">' +
-
-                '<span>' +
-                categoryName(key) +
-                '</span>' +
-
-                '<span>' +
-                '฿' +
-                value.toLocaleString("th-TH") +
-                ' · ' +
-                percent.toFixed(1) +
-                '%' +
-                '</span>' +
-
-            '</div>' +
-
-            '<div class="bar-bg">' +
-
-                '<div class="bar" style="width:' +
-                percent +
-                '%">' +
-                '</div>' +
-
-            '</div>';
-
-
-        container.appendChild(row);
-
-    });
-}
-
-
-/* =========================
-   แก้ไข
-========================= */
-
-async function edit(id) {
-
-    const result =
-        await db
-            .from("transactions")
-            .select("*")
-            .eq("id", id)
-            .single();
-
-
-    if (result.error) {
-
-        alert("ไม่พบรายการ");
-        return;
-    }
-
-
-    const item =
-        result.data;
-
-
-    editingId = id;
-
-
-    document.getElementById("formTitle")
-        .textContent = "แก้ไขรายการ";
-
-    document.getElementById("type")
-        .value = item.type;
-
-    document.getElementById("amount")
-        .value = item.amount;
-
-    document.getElementById("category")
-        .value = item.category;
-
-    document.getElementById("description")
-        .value = item.description || "";
-
-    document.getElementById("date")
-        .value = item.transaction_date;
-
-    document.getElementById("form")
-        .style.display = "block";
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-
-/* =========================
-   ลบ
-========================= */
-
-async function removeItem(id) {
-
-    if (!confirm("ลบรายการนี้ใช่ไหม?")) {
-        return;
-    }
-
-
-    const result =
-        await db
-            .from("transactions")
-            .delete()
-            .eq("id", id);
-
-
-    if (result.error) {
-
-        alert(
-            "ลบไม่สำเร็จ: " +
-            result.error.message
-        );
-
-        return;
-    }
-
-
-    load();
-}
-
-
-/* =========================
-   หมวดภาษาไทย
-========================= */
-
-function categoryName(value) {
-
-    const names = {
-        Food: "อาหาร",
-        Transport: "เดินทาง",
-        Gaming: "เกม",
-        Roblox: "Roblox",
-        Shopping: "ซื้อของ",
-        Salary: "เงินเดือน",
-        Other: "อื่น ๆ"
-    };
-
-    return names[value] || value;
-}
-
-
-/* =========================
-   วันที่
-========================= */
-
-function formatDate(value) {
-
-    const parts =
-        value.split("-");
-
-    return (
-        parts[2] +
-        "/" +
-        parts[1] +
-        "/" +
-        (Number(parts[0]) + 543)
-    );
-}
-
-
-/* =========================
-   ป้องกัน HTML
-========================= */
-
-function escape(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-/* =========================
-   START
-========================= */
-
-async function start() {
-
-    showMonth();
-
-    setToday();
-
-    const logged =
-        await login();
-
-    if (logged) {
-        await load();
-    }
-}
-
-
-start();
-
-</script>
-
-</body>
-</html>
+   LOAD CURRENT 
