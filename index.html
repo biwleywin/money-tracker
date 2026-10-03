@@ -3160,6 +3160,7 @@ function submitPdfPassword() {
 
 async function readStatement(password) {
     setImportStatus("กำลังอ่าน PDF...", false);
+    importState.lastError = ""; importState.lines = [];
     $("impPreview").innerHTML = "";
     try {
         if (!window.pdfjsLib) throw new Error("NO_PDFJS");
@@ -3206,14 +3207,18 @@ async function readStatement(password) {
             return;
         }
         console.error("PDF error:", e);
+        var detail = (e && (e.name || "Error")) + ": " + (e && e.message ? e.message : String(e));
+        importState.lastError = detail + (e && e.stack ? "\n" + String(e.stack).slice(0, 400) : "");
+        $("impDebug").style.display = "block";
         setImportStatus(e && e.message === "NO_PDFJS"
             ? "โหลดตัวอ่าน PDF ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่"
-            : "ไม่สามารถอ่าน PDF ได้\nไฟล์นี้อาจเป็นรูปภาพสแกน หรือมีรูปแบบที่ระบบยังไม่รองรับ", true);
+            : "ไม่สามารถอ่าน PDF ได้\nไฟล์นี้อาจเป็นรูปภาพสแกน หรือมีรูปแบบที่ระบบยังไม่รองรับ\n[รายละเอียด: " + detail + "]", true);
     }
 }
 
 function copyImportDebug() {
-    var L = (importState.lines || []).slice(0, 70).map(function(l) {
+    var L = (importState.lastError ? "ERROR: " + importState.lastError + "\n\n" : "") +
+        (importState.lines || []).slice(0, 70).map(function(l) {
         return l.items.map(function(i) { return i.s + "@" + Math.round(i.x); }).join(" | ");
     }).join("\n");
     var ta = $("impDebugText");
