@@ -1145,6 +1145,8 @@ input:focus,select:focus{border-color:rgba(142,162,255,.65);box-shadow:0 0 0 3px
                 <input id="impPassword" type="password" placeholder="PDF Password" autocomplete="off">
                 <button type="button" onclick="submitPdfPassword()">เปิดไฟล์</button>
             </div>
+            <button id="impDebug" type="button" class="imp-cancel" style="display:none;width:100%;margin-top:10px" onclick="copyImportDebug()">🐞 คัดลอกข้อความที่อ่านได้ (Debug)</button>
+            <textarea id="impDebugText" readonly style="display:none;width:100%;height:220px;margin-top:8px;background:#101214;color:#ddd;border:1px solid #333;border-radius:10px;font-size:11px"></textarea>
             <div id="impPreview"></div>
             <div id="impResult"></div>
         </div>
@@ -1166,17 +1168,11 @@ input:focus,select:focus{border-color:rgba(142,162,255,.65);box-shadow:0 0 0 3px
         <label>หมวดหมู่</label>
         <select id="category">
             <option value="Food">อาหาร</option>
-            <option value="Transport">เดินทาง</option>
-            <option value="Gaming">เกม</option>
             <option value="Roblox">Roblox</option>
+            <option value="Other">อื่น ๆ</option>
+            <option value="Transport">เดินทาง</option>
             <option value="Shopping">ซื้อของ</option>
             <option value="Salary">เงินเดือน</option>
-            <option value="ขายของ">ขายของ</option>
-            <option value="งานออนไลน์">งานออนไลน์</option>
-            <option value="โทรศัพท์">โทรศัพท์</option>
-            <option value="อินเทอร์เน็ต">อินเทอร์เน็ต</option>
-            <option value="ของใช้">ของใช้</option>
-            <option value="Other">อื่น ๆ</option>
         </select>
 
         <label>รายละเอียด</label>
@@ -1300,12 +1296,11 @@ input:focus,select:focus{border-color:rgba(142,162,255,.65);box-shadow:0 0 0 3px
             <select id="categoryFilter">
                 <option value="all">ทุกหมวด</option>
                 <option value="Food">อาหาร</option>
-                <option value="Transport">เดินทาง</option>
-                <option value="Gaming">เกม</option>
                 <option value="Roblox">Roblox</option>
+                <option value="Other">อื่น ๆ</option>
+                <option value="Transport">เดินทาง</option>
                 <option value="Shopping">ซื้อของ</option>
                 <option value="Salary">เงินเดือน</option>
-                <option value="Other">อื่น ๆ</option>
             </select>
         </div>
 
@@ -2892,14 +2887,43 @@ renderCalendar();
    (parser แยกจาก UI: เพิ่มธนาคารใหม่ได้ที่ statementParsers)
 ========================================================= */
 
-var IMPORT_CATEGORIES = ["Food","Transport","Gaming","Roblox","Shopping","Salary",
-    "ขายของ","งานออนไลน์","โทรศัพท์","อินเทอร์เน็ต","ของใช้","Other"];
+var IMPORT_CATEGORIES = ["Food","Roblox","Other","Transport","Shopping","Salary"];
 var importState = { buffer: null, fileName: "", rows: [] };
 var AMOUNT_G = /-?\d{1,3}(?:,\d{3})+\.\d{2}|-?\d+\.\d{2}/g;
 var DATE_START = /^\s*(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4})/;
 
 /* ---------- registry ของ parser ---------- */
+var TM_ROW = /^\s*\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}:\d{2}/;
+
+/* TrueMoney Wallet: วันที่+เวลา | ประเภท | เงินออก/เงินเข้า | รายละเอียด | ยอดก่อนหน้า | ยอดคงเหลือ */
+function detectTrueMoney(lines) {
+    return lines.some(function(l) {
+        return TM_ROW.test(l.text) && (l.text.match(AMOUNT_G) || []).length >= 3;
+    });
+}
+
+function parseTrueMoney(lines) {
+    var rows = [], skipped = 0;
+    lines.forEach(function(l) {
+        if (!TM_ROW.test(l.text)) return;
+        var nums = (l.text.match(AMOUNT_G) || []).map(toNumber);
+        var date = parseStatementDate(l.text);
+        if (nums.length < 3 || !date) { skipped++; return; }
+        var amt = nums[0], prev = nums[1], bal = nums[2];
+        var a = Math.abs(amt), delta = Math.round((bal - prev) * 100) / 100, type = "";
+        if (Math.abs(delta - a) < 0.01) type = "income";
+        else if (Math.abs(delta + a) < 0.01) type = "expense";
+        else if (amt < 0) type = "expense";
+        else if (/เงินออก/.test(l.text)) type = "expense";
+        else if (/เงินเข้า/.test(l.text)) type = "income";
+        /* ยอดก่อนหน้า/ยอดคงเหลือไม่ถูกบันทึกเป็น transaction; ไม่เก็บ description (เบอร์โทร/รหัสอ้างอิง) */
+        rows.push({ date: date, type: type, amount: a, description: "", category: "Roblox" });
+    });
+    return { rows: rows, skipped: skipped };
+}
+
 var statementParsers = {
+    trueMoney: { detect: detectTrueMoney, parse: parseTrueMoney },
     genericTable: { detect: detectGenericTable, parse: parseGenericTable }
     /* เพิ่ม parser ธนาคารอื่นที่นี่ เช่น bankX: {detect:fn, parse:fn} */
 };
@@ -3066,10 +3090,7 @@ var CATEGORY_RULES = [
     [/7[\s-]?eleven|เซเว่น|lotus|โลตัส|big\s?c|restaurant|ร้านอาหาร|cafe|coffee|kfc|mcdonald|starbucks|foodpanda|lineman|grab\s?food/i, "Food", "expense"],
     [/grab|bolt|\bbts\b|\bmrt\b|taxi|แท็กซี่|\bptt\b|ปตท|bangchak|บางจาก|shell|esso|ทางด่วน|easy\s?pass|น้ำมัน/i, "Transport", "expense"],
     [/shopee|ช้อปปี้|lazada|ลาซาด้า|tiktok\s?shop/i, "Shopping", "expense"],
-    [/\btrue\b|ทรู|\bais\b|dtac|ดีแทค|เติมเงิน|top\s?-?up/i, "โทรศัพท์", "expense"],
-    [/3bb|\btot\b|internet|อินเทอร์เน็ต|fiber/i, "อินเทอร์เน็ต", "expense"],
     [/roblox|robux/i, "Roblox", "both"],
-    [/steam|playstation|nintendo|garena|riot|เกม/i, "Gaming", "expense"],
     [/เงินเดือน|salary|payroll/i, "Salary", "income"]
 ];
 
@@ -3149,6 +3170,8 @@ async function readStatement(password) {
         $("impPwBox").style.display = "none";
 
         var lines = await extractLinesFromPDF(pdf);
+        importState.lines = lines;
+        $("impDebug").style.display = "block";
         var chars = lines.reduce(function(n, l) { return n + l.text.length; }, 0);
         if (chars < 20) {
             setImportStatus("ไม่สามารถอ่านข้อความใน PDF ได้\nไฟล์นี้อาจเป็นรูปภาพสแกน (ไม่มี text layer) หรือมีรูปแบบที่ระบบยังไม่รองรับ", true);
@@ -3167,7 +3190,7 @@ async function readStatement(password) {
             setImportStatus("ไม่พบรายการธุรกรรมในไฟล์นี้", true);
             return;
         }
-        rows.forEach(function(r) { r.category = autoCategorize(r); });
+        rows.forEach(function(r) { if (!r.category || r.category === "Other") r.category = autoCategorize(r); });
 
         importState.rows = rows;
         importState.skipped = parsed.skipped;
@@ -3187,6 +3210,17 @@ async function readStatement(password) {
             ? "โหลดตัวอ่าน PDF ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่"
             : "ไม่สามารถอ่าน PDF ได้\nไฟล์นี้อาจเป็นรูปภาพสแกน หรือมีรูปแบบที่ระบบยังไม่รองรับ", true);
     }
+}
+
+function copyImportDebug() {
+    var L = (importState.lines || []).slice(0, 70).map(function(l) {
+        return l.items.map(function(i) { return i.s + "@" + Math.round(i.x); }).join(" | ");
+    }).join("\n");
+    var ta = $("impDebugText");
+    ta.value = L;
+    ta.style.display = "block";
+    ta.select();
+    try { navigator.clipboard.writeText(L); } catch (e) { document.execCommand("copy"); }
 }
 
 function renderImportPreview() {
